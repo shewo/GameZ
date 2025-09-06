@@ -1,2 +1,0 @@
-# GameZ
-GameZone main website
