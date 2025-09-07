@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link href="css/bootstrap-4.3.1.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
+            body {
             background-image: url('images/background1.jpg');
             background-size: cover;
             background-position: center;
@@ -430,29 +430,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 font-size: 14px;
             }
         }
+   
     </style>
 </head>
 <body>
     <!-- Navbar here (copy your navbar HTML) -->
-    <!-- Navbar matching your product pages -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand" href="index.html">GamingZone</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span> 
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                     <li class="nav-item"> <a class="nav-link" href="laptop.html">Laptops</a> </li>
-                     <li class="nav-item"> <a class="nav-link" href="accesories.html">Accessories</a> </li>
-                     <li class="nav-item"> <a class="nav-link" href="console.html">&nbsp;Gaming Consoles&nbsp;</a> </li>
-            </ul>
-            <form class="form-inline">
-                <input class="search-bar" type="search" placeholder="Search" />
-                <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
-    </nav><br>
 
     <section class="py-5">
         <div class="container">
@@ -545,3 +527,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="js/bootstrap-4.3.1.js"></script>
 </body>
 </html>
+
