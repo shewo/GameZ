@@ -435,6 +435,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <!-- Navbar here (copy your navbar HTML) -->
+         <!-- Navbar matching your product pages -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="index.html">GamingZone</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span> 
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                     <li class="nav-item"> <a class="nav-link" href="laptop.html">Laptops</a> </li>
+                     <li class="nav-item"> <a class="nav-link" href="accesories.html">Accessories</a> </li>
+                     <li class="nav-item"> <a class="nav-link" href="console.html">&nbsp;Gaming Consoles&nbsp;</a> </li>
+            </ul>
+            <form class="form-inline">
+                <input class="search-bar" type="search" placeholder="Search" />
+                <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav><br>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content">
+                    <h1 class="display-4 font-weight-bold mb-4">
+                        <span class="text-cosmic">Contact Us</span>
+                    </h1>
+                    <p class="lead">Connect with our gaming equipment experts. We're here to provide stellar solutions for your gaming needs.</p>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <i class="fas fa-satellite-dish" style="font-size: 8rem; opacity: 0.7; color: #00bfff; text-shadow: 0 0 20px #00bfff;"></i>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section class="py-5">
         <div class="container">
