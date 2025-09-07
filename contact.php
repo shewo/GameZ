@@ -60,11 +60,399 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link href="css/bootstrap-4.3.1.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Copy your previous CSS here for body, navbar, form, etc. */
+        body {
+            background-image: url('images/background1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        
+        /* Overlay to ensure text readability */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        /* Navbar styles matching your product pages */
+        .navbar {
+            background-color: rgba(10, 10, 30, 0.9);
+        }
+
+        .navbar .navbar-brand,
+        .navbar-nav .nav-link {
+            color: #ffffff !important;
+        }
+
+        .navbar .nav-link:hover {
+            color: #00ffcc !important;
+        }
+
+        .search-bar {
+            background-color: #222;     
+            color: white;               
+            border: 1px solid #444;     
+            padding: 8px 12px;          
+            border-radius: 8px;         
+        }
+
+        h1 {
+            color: #ffffff;
+            text-align: center;
+            margin: 50px 0 30px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        
+        .hero-section {
+            padding: 80px 0 40px 0;
+            position: relative;
+            color: white;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Fixed Tab Styles for Bootstrap 4 */
+        .nav-tabs {
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            margin-bottom: 0;
+            background: rgba(0,0,0,0.6);
+            border-radius: 10px 10px 0 0;
+            padding: 10px 10px 0 10px;
+        }
+        
+        .nav-tabs .nav-item {
+            margin-bottom: -1px;
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+            padding: 15px 25px;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.1);
+            border: none;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: #00bfff !important;
+            background: rgba(0,191,255,0.1);
+            border: none;
+            border-bottom: 3px solid #00bfff;
+        }
+        
+        .contact-form {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 0 0 15px 15px;
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            padding: 40px;
+            position: relative;
+            z-index: 3;
+            backdrop-filter: blur(15px);
+        }
+        
+        .tab-content {
+            color: #ffffff;
+            padding: 20px 0;
+        }
+        
+        .form-control {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            color: #ffffff;
+            min-height: 48px;
+        }
+        
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .form-control:focus {
+            background: rgba(255,255,255,0.15);
+            border-color: #00bfff;
+            box-shadow: 0 0 0 0.2rem rgba(0,191,255,0.25);
+            color: #ffffff;
+        }
+
+        /* Improved select dropdown styling */
+        .custom-select {
+            background: rgba(255,255,255,0.1) !important;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: #ffffff !important;
+            padding: 12px 40px 12px 15px;
+            margin-bottom: 15px;
+            min-height: 48px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+
+        .custom-select:focus {
+            background: rgba(255,255,255,0.15) !important;
+            border-color: #00bfff;
+            box-shadow: 0 0 0 0.2rem rgba(0,191,255,0.25);
+            color: #ffffff !important;
+            outline: none;
+        }
+
+        .custom-select option {
+            background: #2a2a2a !important;
+            color: #ffffff !important;
+            padding: 8px;
+            border: none;
+        }
+
+        .custom-select option:hover,
+        .custom-select option:focus,
+        .custom-select option:checked {
+            background: #00bfff !important;
+            color: #ffffff !important;
+        }
+
+        /* Additional fallback for browser compatibility */
+        select.form-control {
+            background: rgba(255,255,255,0.1) !important;
+            border: 2px solid rgba(255,255,255,0.2);
+            color: #ffffff !important;
+            padding: 12px 40px 12px 15px;
+            min-height: 48px;
+            font-size: 16px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+
+        select.form-control:focus {
+            background: rgba(255,255,255,0.15) !important;
+            border-color: #00bfff;
+            box-shadow: 0 0 0 0.2rem rgba(0,191,255,0.25);
+            color: #ffffff !important;
+        }
+
+        select.form-control option {
+            background: #2a2a2a !important;
+            color: #ffffff !important;
+            padding: 8px;
+        }
+        
+        .form-label {
+            color: #ffffff;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .btn-contact {
+            background: linear-gradient(45deg, #00bfff, #0099cc);
+            border: none;
+            border-radius: 25px;
+            padding: 15px 40px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            width: 100%;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+            font-size: 16px;
+        }
+        
+        .btn-contact:hover {
+            background: linear-gradient(45deg, #0080ff, #007aa3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,191,255,0.4);
+            color: #ffffff;
+        }
+        
+        .btn-contact:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .info-section {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 60px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .info-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 
+                0 5px 15px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 10px 25px rgba(0,0,0,0.4),
+                0 0 20px rgba(0,191,255,0.2);
+            border-color: rgba(0,191,255,0.3);
+        }
+        
+        .info-icon {
+            font-size: 3rem;
+            color: #00bfff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0,191,255,0.5);
+        }
+        
+        .required {
+            color: #ff6b6b;
+        }
+        
+        .privacy-notice {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+            margin-top: 15px;
+        }
+        
+        .award-badges {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .badge-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            max-width: 120px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .form-check-input:checked {
+            background-color: #00bfff;
+            border-color: #00bfff;
+        }
+        
+        .form-check-input:focus {
+            border-color: #00bfff;
+            box-shadow: 0 0 0 0.25rem rgba(0,191,255,0.25);
+        }
+        
+        .text-cosmic {
+            background: linear-gradient(45deg, #00bfff, #0099cc, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0,191,255,0.5);
+        }
+        
+        /* Text shadow for better readability */
+        h1, h2, h3, h4, h5, h6, p, li {
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+        
+        .lead {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+        }
+        
+        /* Success/Error Messages */
+        .alert {
+            margin-top: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .alert-success {
+            background: rgba(40, 167, 69, 0.8);
+            border: 1px solid rgba(40, 167, 69, 0.5);
+            color: #ffffff;
+        }
+        
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.8);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ffffff;
+        }
+
+        /* Fix for mobile responsiveness */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 60px 0 30px 0;
+            }
+            
+            .contact-form {
+                padding: 30px 20px;
+            }
+            
+            .nav-tabs .nav-link {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Navbar here (copy your navbar HTML) -->
+    <!-- Navbar matching your product pages -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="index.html">GamingZone</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span> 
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                     <li class="nav-item"> <a class="nav-link" href="laptop.html">Laptops</a> </li>
+                     <li class="nav-item"> <a class="nav-link" href="accesories.html">Accessories</a> </li>
+                     <li class="nav-item"> <a class="nav-link" href="console.html">&nbsp;Gaming Consoles&nbsp;</a> </li>
+            </ul>
+            <form class="form-inline">
+                <input class="search-bar" type="search" placeholder="Search" />
+                <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav><br>
 
     <section class="py-5">
         <div class="container">
