@@ -1,66 +1,116 @@
 <?php
-// Initialize variables
-$success = '';
-$error = '';
+// Initialize variables for form data and messages
+$successMessage = "";
+$errorMessage = "";
+$formSubmitted = false;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Sanitize and validate input
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-    $firstName = htmlspecialchars(strip_tags($_POST['firstName']));
-    $lastName = htmlspecialchars(strip_tags($_POST['lastName']));
-    $phone = htmlspecialchars(strip_tags($_POST['phone']));
-    $country = htmlspecialchars(strip_tags($_POST['country']));
-    $interest = htmlspecialchars(strip_tags($_POST['interest']));
-    $messageContent = htmlspecialchars(strip_tags($_POST['message']));
-    $privacy = isset($_POST['privacy']) ? true : false;
-
-    if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Please enter a valid email.";
-    } elseif (!$firstName || !$lastName) {
-        $error = "Please enter your full name.";
-    } elseif (!$phone) {
-        $error = "Please enter your phone number.";
-    } elseif (!$country) {
-        $error = "Please select your country.";
-    } elseif (!$interest) {
-        $error = "Please select your interest.";
-    } elseif (!$privacy) {
-        $error = "You must agree to our privacy policy.";
+// Process form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $formSubmitted = true;
+    
+    // Collect form data
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $firstName = filter_input(INPUT_POST, 'firstName', FILTER_SANITIZE_STRING);
+    $lastName = filter_input(INPUT_POST, 'lastName', FILTER_SANITIZE_STRING);
+    $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
+    $country = filter_input(INPUT_POST, 'country', FILTER_SANITIZE_STRING);
+    $interest = filter_input(INPUT_POST, 'interest', FILTER_SANITIZE_STRING);
+    $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
+    
+    // Basic validation
+    if (empty($email) || empty($firstName) || empty($lastName) || empty($phone) || empty($country) || empty($interest)) {
+        $errorMessage = "Please fill in all required fields.";
     } else {
-        // Prepare email
-        $to = "support@gamerzone.com"; // Your receiving email
-        $subject = "New Contact Form Submission from $firstName $lastName";
-        $body = "Name: $firstName $lastName\n";
-        $body .= "Email: $email\n";
-        $body .= "Phone: $phone\n";
-        $body .= "Country: $country\n";
-        $body .= "Interest: $interest\n";
-        $body .= "Message: " . ($messageContent ?: 'No specific message provided') . "\n";
-        $body .= "Submitted on: " . date("Y-m-d H:i:s") . "\n";
-        $body .= "User Agent: " . $_SERVER['HTTP_USER_AGENT'];
-
-        $headers = "From: $email\r\n";
-        $headers .= "Reply-To: $email\r\n";
-
-        if (mail($to, $subject, $body, $headers)) {
-            $success = "Message sent successfully! We'll contact you soon.";
+        // Email recipient
+        $to = "support@gamerzone.com";
+        
+        // Email subject
+        $subject = "New Contact Form Submission: $interest";
+        
+        // Email headers
+        $headers = "From: $email" . "\r\n";
+        $headers .= "Reply-To: $email" . "\r\n";
+        $headers .= "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
+        
+        // Email body
+        $emailBody = "
+            <html>
+            <head>
+                <title>New Contact Form Submission</title>
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; }
+                    .container { width: 100%; max-width: 600px; margin: 0 auto; }
+                    .header { background-color: #0099cc; color: #ffffff; padding: 10px 20px; }
+                    .content { padding: 20px; border: 1px solid #dddddd; }
+                    .footer { font-size: 12px; color: #777777; margin-top: 20px; }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <div class='header'>
+                        <h2>New Contact Form Submission</h2>
+                    </div>
+                    <div class='content'>
+                        <p><strong>Name:</strong> $firstName $lastName</p>
+                        <p><strong>Email:</strong> $email</p>
+                        <p><strong>Phone:</strong> $phone</p>
+                        <p><strong>Country:</strong> $country</p>
+                        <p><strong>Interest:</strong> $interest</p>
+                        <p><strong>Message:</strong><br>$message</p>
+                        <p><strong>Submission Time:</strong> " . date('Y-m-d H:i:s') . "</p>
+                    </div>
+                    <div class='footer'>
+                        <p>This email was sent from the GamingZone website contact form.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        ";
+        
+        // Send email
+        if(mail($to, $subject, $emailBody, $headers)) {
+            $successMessage = "Thank you! Your message has been sent successfully. We'll contact you soon.";
+            
+            // Clear form data after successful submission
+            $email = $firstName = $lastName = $phone = $country = $interest = $message = "";
         } else {
-            $error = "Failed to send message. Please try again later.";
+            $errorMessage = "Failed to send message. Please try again or contact us directly.";
         }
     }
 }
-?>
 
+// Function to retain form values after failed submission
+function getValue($fieldName) {
+    global $formSubmitted, $errorMessage;
+    if ($formSubmitted && !empty($errorMessage) && isset($_POST[$fieldName])) {
+        return htmlspecialchars($_POST[$fieldName]);
+    }
+    return '';
+}
+
+// Function to check if option was selected
+function isSelected($fieldName, $value) {
+    global $formSubmitted, $errorMessage;
+    if ($formSubmitted && !empty($errorMessage) && isset($_POST[$fieldName]) && $_POST[$fieldName] == $value) {
+        return 'selected';
+    }
+    return '';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - GamingZone</title>
-    <link href="css/bootstrap-4.3.1.css" rel="stylesheet">
+    <!-- Bootstrap 4 CSS -->
+    <link href="css/bootstrap-4.3.1.css" rel="stylesheet" />
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-            body {
+        body {
             background-image: url('images/background1.jpg');
             background-size: cover;
             background-position: center;
@@ -430,12 +480,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 font-size: 14px;
             }
         }
-   
     </style>
 </head>
 <body>
-    <!-- Navbar here (copy your navbar HTML) -->
-         <!-- Navbar matching your product pages -->
+    <!-- Navbar matching your product pages -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <a class="navbar-brand" href="index.html">GamingZone</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -472,95 +520,295 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </section>
 
+    <!-- Contact Form Section -->
     <section class="py-5">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
                     <div class="contact-form">
-                        <?php if($success): ?>
-                            <div class="alert alert-success"><?php echo $success; ?></div>
-                        <?php elseif($error): ?>
-                            <div class="alert alert-danger"><?php echo $error; ?></div>
-                        <?php endif; ?>
+                        <!-- Tabs -->
+                        <ul class="nav nav-tabs" id="contactTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="contact-tab" data-toggle="tab" href="#contact" role="tab">
+                                    <i class="fas fa-rocket mr-2"></i>Contact us
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="locations-tab" data-toggle="tab" href="#locations" role="tab">
+                                    <i class="fas fa-globe mr-2"></i>Our Locations
+                                </a>
+                            </li>
+                        </ul>
 
-                        <form method="POST" action="">
-                            <div class="form-group">
-                                <label class="form-label"><span class="required">*</span>Email</label>
-                                <input type="email" name="email" class="form-control" placeholder="your.email@gmail.com" required>
-                            </div>
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="contactTabContent">
+                            <!-- Contact Form Tab -->
+                            <div class="tab-pane fade show active" id="contact" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p class="mb-4">The fastest way to connect with our gaming equipment specialists is through our contact form. Your message will be routed to the right team, and we'll respond at light speed.</p>
+                                        
+                                        <p class="mb-4">For an even more targeted response, please select your inquiry type below.</p>
+                                        
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><i class="fas fa-check text-info mr-2"></i> Looking for gaming laptops and need guidance?</li>
+                                            <li class="mb-2"><i class="fas fa-check text-info mr-2"></i> Want to see our latest gaming accessories?</li>
+                                            <li class="mb-2"><i class="fas fa-check text-info mr-2"></i> Have questions about our gaming equipment or services?</li>
+                                        </ul>
+                                        
+                                        <p>Share your gaming needs and goals - we'll help you level up!</p>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label"><span class="required">*</span>First Name</label>
-                                        <input type="text" name="firstName" class="form-control" placeholder="John" required>
+                                        <!-- Award Badges -->
+                                        <div class="award-badges">
+                                            <div class="badge-item">
+                                                <div class="badge bg-gradient text-white rounded-pill px-2 py-1" style="background: linear-gradient(45deg, #ff6b6b, #ee5a52); font-size: 12px;">
+                                                    <strong>Leader</strong><br>
+                                                    <small>Gaming Gear<br>2024</small>
+                                                </div>
+                                            </div>
+                                            <div class="badge-item">
+                                                <div class="badge text-dark rounded-circle p-2" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: linear-gradient(45deg, #ffd700, #ffed4e); font-size: 10px;">
+                                                    <small><strong>Gamer<br>Choice<br>2024</strong></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-6">
+                                        <!-- Display success/error messages -->
+                                        <?php if (!empty($successMessage)): ?>
+                                            <div class="alert alert-success">
+                                                <i class="fas fa-check-circle mr-2"></i> <?php echo $successMessage; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if (!empty($errorMessage)): ?>
+                                            <div class="alert alert-danger">
+                                                <i class="fas fa-exclamation-triangle mr-2"></i> <?php echo $errorMessage; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <form id="contactForm" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                                            <div class="form-group">
+                                                <label class="form-label"><span class="required">*</span>Email</label>
+                                                <input type="email" name="email" class="form-control" placeholder="your.email@gmail.com" required value="<?php echo getValue('email'); ?>">
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="form-label"><span class="required">*</span>First Name</label>
+                                                        <input type="text" name="firstName" class="form-control" placeholder="John" required value="<?php echo getValue('firstName'); ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="form-label"><span class="required">*</span>Last Name</label>
+                                                        <input type="text" name="lastName" class="form-control" placeholder="Doe" required value="<?php echo getValue('lastName'); ?>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label"><span class="required">*</span>Phone Number</label>
+                                                <input type="tel" name="phone" class="form-control" placeholder="+94 71 123 4567" required value="<?php echo getValue('phone'); ?>">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label"><span class="required">*</span>Country</label>
+                                                <select name="country" class="custom-select form-control" required>
+                                                    <option value="">Select your country</option>
+                                                    <option value="lk" <?php echo isSelected('country', 'lk'); ?>>Sri Lanka</option>
+                                                    <option value="in" <?php echo isSelected('country', 'in'); ?>>India</option>
+                                                    <option value="us" <?php echo isSelected('country', 'us'); ?>>United States</option>
+                                                    <option value="uk" <?php echo isSelected('country', 'uk'); ?>>United Kingdom</option>
+                                                    <option value="ca" <?php echo isSelected('country', 'ca'); ?>>Canada</option>
+                                                    <option value="au" <?php echo isSelected('country', 'au'); ?>>Australia</option>
+                                                    <option value="de" <?php echo isSelected('country', 'de'); ?>>Germany</option>
+                                                    <option value="fr" <?php echo isSelected('country', 'fr'); ?>>France</option>
+                                                    <option value="jp" <?php echo isSelected('country', 'jp'); ?>>Japan</option>
+                                                    <option value="sg" <?php echo isSelected('country', 'sg'); ?>>Singapore</option>
+                                                    <option value="my" <?php echo isSelected('country', 'my'); ?>>Malaysia</option>
+                                                    <option value="th" <?php echo isSelected('country', 'th'); ?>>Thailand</option>
+                                                    <option value="other" <?php echo isSelected('country', 'other'); ?>>Other</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label"><span class="required">*</span>I am interested in...</label>
+                                                <select name="interest" class="custom-select form-control" required>
+                                                    <option value="">Please select</option>
+                                                    <option value="gaming-laptops" <?php echo isSelected('interest', 'gaming-laptops'); ?>>Gaming Laptops</option>
+                                                    <option value="accessories" <?php echo isSelected('interest', 'accessories'); ?>>Gaming Accessories (Keyboards, Mice, Headsets)</option>
+                                                    <option value="consoles" <?php echo isSelected('interest', 'consoles'); ?>>Gaming Consoles (PS5, Xbox, VR)</option>
+                                                    <option value="custom-build" <?php echo isSelected('interest', 'custom-build'); ?>>Custom PC Build</option>
+                                                    <option value="support" <?php echo isSelected('interest', 'support'); ?>>Technical Support</option>
+                                                    <option value="warranty" <?php echo isSelected('interest', 'warranty'); ?>>Warranty & Service</option>
+                                                    <option value="bulk-order" <?php echo isSelected('interest', 'bulk-order'); ?>>Bulk/Corporate Orders</option>
+                                                    <option value="price-inquiry" <?php echo isSelected('interest', 'price-inquiry'); ?>>Price Inquiry</option>
+                                                    <option value="partnership" <?php echo isSelected('interest', 'partnership'); ?>>Business Partnership</option>
+                                                    <option value="other" <?php echo isSelected('interest', 'other'); ?>>Other</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label">Message</label>
+                                                <textarea name="message" class="form-control" rows="4" placeholder="Tell us about your gaming needs, budget, or any specific questions you have..."><?php echo getValue('message'); ?></textarea>
+                                            </div>
+                                            
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" name="privacy" id="privacyCheck" required>
+                                                <label class="form-check-label privacy-notice" for="privacyCheck">
+                                                    <span class="required">*</span>I agree to receive information about products, services and events from GamingZone.
+                                                </label>
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-contact" id="submitBtn">
+                                                <i class="fas fa-paper-plane mr-2"></i>Send Message
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label"><span class="required">*</span>Last Name</label>
-                                        <input type="text" name="lastName" class="form-control" placeholder="Doe" required>
+                            </div>
+                            
+                            <!-- Locations Tab -->
+                            <div class="tab-pane fade" id="locations" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="info-card">
+                                            <i class="fas fa-building info-icon"></i>
+                                            <h5>NSBM University Town</h5>
+                                            <p>Colombo 03<br>Sri Lanka</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="info-card">
+                                            <i class="fas fa-headset info-icon"></i>
+                                            <h5>Customer Support</h5>
+                                            <p>+94 71 123 4567<br>Mon-Sat: 9AM-10PM<br></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="info-card">
+                                            <i class="fas fa-envelope info-icon"></i>
+                                            <h5>Email Us</h5>
+                                            <p>support@gamerzone.com<br>sales@gamerzone.com<br>Response within 24 hours</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label class="form-label"><span class="required">*</span>Phone Number</label>
-                                <input type="tel" name="phone" class="form-control" placeholder="+94 71 123 4567" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label"><span class="required">*</span>Country</label>
-                                <select name="country" class="custom-select form-control" required>
-                                    <option value="">Select your country</option>
-                                    <option value="Sri Lanka">Sri Lanka</option>
-                                    <option value="India">India</option>
-                                    <option value="US">United States</option>
-                                    <option value="UK">United Kingdom</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label"><span class="required">*</span>I am interested in...</label>
-                                <select name="interest" class="custom-select form-control" required>
-                                    <option value="">Please select</option>
-                                    <option value="Gaming Laptops">Gaming Laptops</option>
-                                    <option value="Accessories">Gaming Accessories</option>
-                                    <option value="Consoles">Gaming Consoles</option>
-                                    <option value="Custom Build">Custom PC Build</option>
-                                    <option value="Support">Technical Support</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Message</label>
-                                <textarea name="message" class="form-control" rows="4" placeholder="Your message here..."></textarea>
-                            </div>
-
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" name="privacy" required>
-                                <label class="form-check-label privacy-notice">
-                                    <span class="required">*</span>I agree to receive information about products, services and events from GamingZone.
-                                </label>
-                            </div>
-
-                            <button type="submit" class="btn btn-contact">
-                                <i class="fas fa-paper-plane mr-2"></i>Send Message
-                            </button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer here (copy your footer HTML) -->
+    <!-- Info Section -->
+    <section class="info-section">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="mb-4">
+                        <span class="text-cosmic">Why Choose GamingZone?</span>
+                    </h2>
+                    <p class="lead text-light">We provide gaming solutions that level up your experience</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="info-card">
+                        <i class="fas fa-laptop info-icon"></i>
+                        <h5>Premium Gaming Laptops</h5>
+                        <p>Latest gaming laptops from MSI, ASUS, HP, Lenovo and more top brands.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="info-card">
+                        <i class="fas fa-gamepad info-icon"></i>
+                        <h5>Gaming Accessories</h5>
+                        <p>High-quality keyboards, mice, headsets and more gaming peripherals.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="info-card">
+                        <i class="fas fa-tools info-icon"></i>
+                        <h5>Expert Support</h5>
+                        <p>Professional setup, configuration and ongoing technical support.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="info-card">
+                        <i class="fas fa-shield-alt info-icon"></i>
+                        <h5>Warranty Coverage</h5>
+                        <p>Comprehensive warranty and after-sales service for peace of mind.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Footer -->
+    <footer class="text-center text-lg-start text-white mt-5" style="background-color: #111;">
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-uppercase font-weight-bold">GamerZone</h6>
+                    <p>Powering your play with the latest in gaming laptops, accessories, and VR tech.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-uppercase font-weight-bold">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-white">Home</a></li>
+                        <li><a href="contact.php" class="text-white">Contact Us</a></li>
+                        <li><a href="contact.php" class="text-white">Feedback</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-uppercase font-weight-bold">Contact</h6>
+                    <p>Email: support@gamerzone.com</p>
+                    <p>Phone: +94 71 123 4567</p>
+                    <div>
+                        <a href="#" class="text-white mr-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white mr-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white mr-3"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(255,255,255,0.05);">
+            © 2025 GamerZone. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Bootstrap 4 JS -->
     <script src="js/popper.min.js"></script>
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap-4.3.1.js"></script>
+    
+    <script>
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe info cards
+        document.querySelectorAll('.info-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>
-
