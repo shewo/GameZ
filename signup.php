@@ -106,7 +106,7 @@
       </div>
       <button type="submit" class="btn btn-primary btn-block" name="signup-submit">Sign Up</button>
     </form>
-    <center><br><big><a href="index.php" class="text-info">Login</a></big></center>
+    <center><br><big><a href="login.php" class="text-info">Login</a></big></center>
   </div>
 </div>
 

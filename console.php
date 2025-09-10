@@ -1,5 +1,5 @@
 <?php
-// Define products as an array
+// Define static products
 $products = [
     [
         'name' => 'PlayStation 5 (PS5)',
@@ -75,6 +75,36 @@ $products = [
       padding: 8px 12px;          
       border-radius: 8px;         
     }
+    .account-btn {
+  border: none;
+  background: none;
+  padding: 0;
+  width: auto;
+  height: auto;
+}
+.account-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+.dropdown-menu {
+  background-color: rgba(10, 10, 30, 0.95);
+  border: none;
+  min-width: 150px;
+}
+.dropdown-item {
+  color: #00ffff;
+  background-color: transparent;
+  transition: background 0.3s, color 0.3s;
+}
+.dropdown-item:hover {
+  background-color: #00bfff;
+  color: #ffffff;
+}
+.dropdown-toggle::after {
+  display: none;
+}
+
     .navbar {
       background-color: rgba(10, 10, 30, 0.9);
     }
@@ -124,16 +154,17 @@ $products = [
 
 <body>
 <div class="container-fluid px-0">
-<!-- Navbar -->
+
+</nav><!-- Updated Navbar Section in parts.php -->
 <nav class="navbar navbar-expand-lg navbar-dark">
   <a class="navbar-brand" href="web1.php">GamingZone</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-    <span class="navbar-toggler-icon"></span> 
+    <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item"> <a class="nav-link" href="laptop.php">Laptops</a> </li>
-      <li class="nav-item"> <a class="nav-link" href="parts.php">Accessories</a> </li>
+      <li class="nav-item"> <a class="nav-link active" href="parts.php">Accessories</a> </li>
       <li class="nav-item"> <a class="nav-link" href="accesories.php">Parts</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console.php">Gaming Consoles</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console_games.php">Console Games</a> </li>
@@ -142,12 +173,25 @@ $products = [
       <input class="search-bar" type="search" placeholder="Search" />
       <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
     </form>
+
+    <!-- Dropdown Button (copied from web1.php) -->
+    <div class="dropdown ml-3">
+      <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <img src="images/login.png" alt="User" class="account-img">
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
+        <a class="dropdown-item" href="signup.php">Sign Up</a>
+        <a class="dropdown-item" href="login.php">Login</a>
+      </div>
+    </div>
+
   </div>
 </nav>
 
+
 <br>
 
-  <!-- Carousel (same as before) -->
+  <!-- Carousel -->
   <div class="px-3 px-md-5">
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
       <ol class="carousel-indicators">
@@ -205,9 +249,34 @@ $products = [
       </div>
     </div>
     <?php endforeach; ?>
+
+    <!-- Admin-added consoles -->
+    <?php
+    // Database connection
+    $conn = new mysqli("localhost", "root", "", "gamezone");
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $result = $conn->query("SELECT * FROM gaming_consoles ORDER BY id DESC");
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<div class="col-xl-3 mb-4">';
+            echo '<div class="card col-md-4 col-xl-12">';
+            echo '<img class="card-img-top" src="uploads/'.$row['image'].'" alt="'.$row['name'].'">';
+            echo '<div class="card-body">';
+            echo '<h5 class="card-title">'.$row['name'].'</h5>';
+            echo '<h5 class="card-title">'.number_format($row['price'],0).' LKR</h5>';
+            echo '<p class="card-text">'.$row['specs'].'</p>';
+            echo '<button class="btn btn-primary" onclick="buyProduct(\''.$row['name'].'\', \''.$row['price'].'\', \'uploads/'.$row['image'].'\')">Buy Now</button>';
+            echo '</div></div></div>';
+        }
+    }
+    $conn->close();
+    ?>
   </div>
 
-  <!-- Footer (same as before) -->
+  <!-- Footer -->
   <footer class="text-center text-lg-start text-white mt-5" style="background-color: #111;">
     <div class="container p-4">
       <div class="row">
