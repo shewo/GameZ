@@ -138,8 +138,8 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item"> <a class="nav-link" href="laptop.php">Laptops</a> </li>
-      <li class="nav-item"> <a class="nav-link" href="parts.php">Accessories</a> </li>
-      <li class="nav-item"> <a class="nav-link" href="accesories.php">Parts</a> </li>
+      <li class="nav-item"> <a class="nav-link" href="accesories.php">Accessories</a> </li>
+      <li class="nav-item"> <a class="nav-link" href="parts.php">Parts</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console.php">Gaming Consoles</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console_games.php">Console Games</a> </li>
     </ul>
@@ -154,9 +154,10 @@
   </button>
   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
     <a class="dropdown-item" href="signup.php">Sign Up</a>
-    <a class="dropdown-item" href="index.php">Login</a>
+    <a class="dropdown-item" href="login.php">Login</a>
   </div>
 </div>
+
 
 
 
@@ -233,7 +234,7 @@
       <div class="card-body">
         <h5 class="card-title">parts</h5>
         <p class="card-text">Level up with pro gear—headsets, keyboards, mice &amp; more.</p>
-        <a href="accesories.php" class="btn btn-primary btn-block">Explore</a>
+        <a href="parts.php" class="btn btn-primary btn-block">Explore</a>
       </div>
     </div>
 
@@ -253,7 +254,7 @@
       <div class="card-body">
         <h5 class="card-title">accessories</h5>
         <p class="card-text">High-performance parts: GPUs, processors, and cooling systems.</p>
-        <a href="parts.php" class="btn btn-primary btn-block">Explore</a>
+        <a href="accesories.php" class="btn btn-primary btn-block">Explore</a>
       </div>
     </div>
 

@@ -1,3 +1,4 @@
+
 <?php
 // Initialize variables for form data and messages
 $successMessage = "";
@@ -811,4 +812,5 @@ function isSelected($fieldName, $value) {
         });
     </script>
 </body>
+
 </html>
