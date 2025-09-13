@@ -1,5 +1,5 @@
 <?php
-// laptop-showcase.php
+// console_games.php
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,7 +7,7 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Laptop Showcase - GamerZone</title>
+  <title>Console Games - GamerZone</title>
 
   <!-- Bootstrap -->
   <link href="css/bootstrap-4.3.1.css" rel="stylesheet" />
@@ -30,6 +30,36 @@
     .navbar .nav-link:hover {
       color: #00ffcc !important;
     }
+    .account-btn {
+  border: none;
+  background: none;
+  padding: 0;
+  width: auto;
+  height: auto;
+}
+.account-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+.dropdown-menu {
+  background-color: rgba(10, 10, 30, 0.95);
+  border: none;
+  min-width: 150px;
+}
+.dropdown-item {
+  color: #00ffff;
+  background-color: transparent;
+  transition: background 0.3s, color 0.3s;
+}
+.dropdown-item:hover {
+  background-color: #00bfff;
+  color: #ffffff;
+}
+.dropdown-toggle::after {
+  display: none;
+}
+
     h1 {
       color: #ffffff;
       text-align: center;
@@ -76,17 +106,17 @@
 
 <body>
 <div class="container-fluid px-0">
-<!-- Navbar -->
+<!-- Updated Navbar Section in parts.php -->
 <nav class="navbar navbar-expand-lg navbar-dark">
   <a class="navbar-brand" href="web1.php">GamingZone</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-    <span class="navbar-toggler-icon"></span> 
+    <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item"> <a class="nav-link" href="laptop.php">Laptops</a> </li>
-      <li class="nav-item"> <a class="nav-link" href="accesories.php">Accessories</a> </li>
-      <li class="nav-item"> <a class="nav-link" href="parts.php">Parts</a> </li>
+      <li class="nav-item"> <a class="nav-link active" href="parts.php">Accessories</a> </li>
+      <li class="nav-item"> <a class="nav-link" href="accesories.php">Parts</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console.php">Gaming Consoles</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console_games.php">Console Games</a> </li>
     </ul>
@@ -94,8 +124,21 @@
       <input class="search-bar" type="search" placeholder="Search" />
       <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
     </form>
+
+    <!-- Dropdown Button (copied from web1.php) -->
+    <div class="dropdown ml-3">
+      <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <img src="images/login.png" alt="User" class="account-img">
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
+        <a class="dropdown-item" href="signup.php">Sign Up</a>
+        <a class="dropdown-item" href="login.php">Login</a>
+      </div>
+    </div>
+
   </div>
 </nav>
+
 
 <br>
 
@@ -141,127 +184,101 @@
     </div>
   </div>
 
-  <h1>Our Latest Accessories</h1>
-  <div class="row">
-    <?php
-    // Define products as an array
-    $products = [
-      [
-        "name" => "Assassin's Creed Shadows Video game",
-        "price" => "17250",
-        "image" => "images/ac_shados.png"
-      ],
-      [
-        "name" => " Avatar: Frontiers of Pandora Video game",
-        "price" => "15000",
-        "image" => "images/KENA.PNG"
-      ],
-       [
-        "name" => "Star Wars Outlaws",
-        "price" => "10000",
-        "image" => "images/starwars1.png"
-      ],
-      [
-        "name" => "Far Cry 6 Video game",
-        "price" => "7500",
-        "image" => "images/farcry6.png"
-      ],
-       [
-        "name" => "f1.25",
-        "price" => "17250",
-        "image" => "images/f1.png"
-      ],
-      [
-        "name" => "Kena: Bridge of Spirits",
-        "price" => "4700",
-        "image" => "images/kena21.PNG"
-      ],
-       [
-        "name" => "Need for Speed Unbound Video game",
-        "price" => "7200",
-        "image" => "images/nfs_unbound1.png"
-      ],
-      [
-        "name" => "Alan Wake 2 Survival game",
-        "price" => "10000",
-        "image" => "images/alanwake2.png"
-      ],
-       [
-        "name" => "Jurassic World Evolution 3",
-        "price" => "5400",
-        "image" => "images/jurassicworld2.png"
-      ],
-      [
-        "name" => "Black Myth: Wukong Video game",
-        "price" => "12300",
-        "image" => "images/black_myth.png"
-      ],
-       [
-        "name" => "Horizon Zero Dawn Video game",
-        "price" => "4500",
-        "image" => "images/horizen_zerodown.png"
-      ],
-      [
-        "name" => "Call of Duty: Black Ops 6 Video game",
-        "price" => "4500",
-        "image" => "images/cod1.png"
-      ],
-     
-    ];
 
-    foreach ($products as $product) {
-      echo '
-      <div class="col-xl-3">
-        <div class="card col-md-4 col-xl-12">
-          <img class="card-img-top" src="'.$product["image"].'" alt="'.$product["name"].'">
-          <div class="card-body">
-            <h5 class="card-title">'.$product["name"].'</h5>
-            <h5 class="card-title">'.number_format($product["price"]).' LKR</h5>
-            <button class="btn btn-primary" onclick="buyProduct(\''.$product["name"].'\', \''.$product["price"].'\', \''.$product["image"].'\')">Buy Now</button>
-          </div>
+<h1>Our Latest Console Games</h1>
+<div class="row">
+<?php
+// Static products
+$products = [
+  ["name"=>"Assassin's Creed Shadows Video game","price"=>"17250","image"=>"images/ac_shados.png"],
+  ["name"=>"Avatar: Frontiers of Pandora Video game","price"=>"15000","image"=>"images/KENA.PNG"],
+  ["name"=>"Star Wars Outlaws","price"=>"10000","image"=>"images/starwars1.png"],
+  ["name"=>"Far Cry 6 Video game","price"=>"7500","image"=>"images/farcry6.png"],
+  ["name"=>"f1.25","price"=>"17250","image"=>"images/f1.png"],
+  ["name"=>"Kena: Bridge of Spirits","price"=>"4700","image"=>"images/kena21.PNG"],
+  ["name"=>"Need for Speed Unbound Video game","price"=>"7200","image"=>"images/nfs_unbound1.png"],
+  ["name"=>"Alan Wake 2 Survival game","price"=>"10000","image"=>"images/alanwake2.png"],
+  ["name"=>"Jurassic World Evolution 3","price"=>"5400","image"=>"images/jurassicworld2.png"],
+  ["name"=>"Black Myth: Wukong Video game","price"=>"12300","image"=>"images/black_myth.png"],
+  ["name"=>"Horizon Zero Dawn Video game","price"=>"4500","image"=>"images/horizen_zerodown.png"],
+  ["name"=>"Call of Duty: Black Ops 6 Video game","price"=>"4500","image"=>"images/cod1.png"]
+];
+
+// Display static products
+foreach ($products as $product) {
+    echo '
+    <div class="col-xl-3 mb-4">
+      <div class="card col-md-4 col-xl-12">
+        <img class="card-img-top" src="'.$product["image"].'" alt="'.$product["name"].'">
+        <div class="card-body">
+          <h5 class="card-title">'.$product["name"].'</h5>
+          <h5 class="card-title">'.number_format($product["price"]).' LKR</h5>
+          <button class="btn btn-primary" onclick="buyProduct(\''.$product["name"].'\', \''.$product["price"].'\', \''.$product["image"].'\')">Buy Now</button>
         </div>
-        <br>
-      </div>';
-    }
-    ?>
-  </div>
-</div>
- <!-- Footer -->
-    <footer class="text-center text-lg-start text-white mt-5" style="background-color: #111;">
-      <div class="container p-4">
-        <div class="row">
-          <div class="col-md-4 mb-4">
-            <h6 class="text-uppercase fw-bold">GamerZone</h6>
-            <p>Powering your play with the latest in gaming laptops, accessories, and VR tech.</p>
-          </div>
-          <div class="col-md-4 mb-4">
-            <h6 class="text-uppercase fw-bold">Quick Links</h6>
-            <ul class="list-unstyled">
-              <li><a href="web1.php" class="text-white">Home</a></li>
-              <li><a href="contact.php" class="text-white">Contact Us</a></li>
-              <li><a href="contact.php" class="text-white">Feedback</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4 mb-4">
-            <h6 class="text-uppercase fw-bold">Contact</h6>
-            <p>Email: support@gamerzone.com</p>
-            <p>Phone: +94 71 123 4567</p>
-            <div>
-              <a href="#" class="text-white me-3"><i class="fab fa-facebook"></i></a>
-              <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-              <a href="#" class="text-white me-3"><i class="fab fa-discord"></i></a>
+      </div>
+    </div>';
+}
+
+// Connect to DB and display admin-added console games
+$conn = new mysqli("localhost","root","","gamezone");
+if($conn->connect_error){
+    die("Connection failed: ".$conn->connect_error);
+}
+
+$result = $conn->query("SELECT * FROM console_games ORDER BY id DESC"); // table for cadmin.php
+if($result && $result->num_rows > 0){
+    while($row = $result->fetch_assoc()){
+        echo '
+        <div class="col-xl-3 mb-4">
+          <div class="card col-md-4 col-xl-12">
+            <img class="card-img-top" src="uploads/'.$row["image"].'" alt="'.$row["name"].'">
+            <div class="card-body">
+              <h5 class="card-title">'.$row["name"].'</h5>
+              <h5 class="card-title">'.number_format($row["price"]).' LKR</h5>
+              <p class="card-text">'.$row["specs"].'</p>
+              <button class="btn btn-primary" onclick="buyProduct(\''.$row["name"].'\', \''.$row["price"].'\', \'uploads/'.$row["image"].'\')">Buy Now</button>
             </div>
           </div>
+        </div>';
+    }
+}
+$conn->close();
+?>
+</div>
+
+<!-- Footer -->
+<footer class="text-center text-lg-start text-white mt-5" style="background-color: #111;">
+  <div class="container p-4">
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <h6 class="text-uppercase fw-bold">GamerZone</h6>
+        <p>Powering your play with the latest in gaming laptops, accessories, and VR tech.</p>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h6 class="text-uppercase fw-bold">Quick Links</h6>
+        <ul class="list-unstyled">
+          <li><a href="web1.php" class="text-white">Home</a></li>
+          <li><a href="contact.php" class="text-white">Contact Us</a></li>
+          <li><a href="contact.php" class="text-white">Feedback</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h6 class="text-uppercase fw-bold">Contact</h6>
+        <p>Email: support@gamerzone.com</p>
+        <p>Phone: +94 71 123 4567</p>
+        <div>
+          <a href="#" class="text-white me-3"><i class="fab fa-facebook"></i></a>
+          <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="text-white me-3"><i class="fab fa-discord"></i></a>
         </div>
       </div>
-      <div class="text-center p-3" style="background-color: rgba(255,255,255,0.05);">
-        © 2025 GamerZone. All rights reserved.
-      </div>
-    </footer>
+    </div>
   </div>
+  <div class="text-center p-3" style="background-color: rgba(255,255,255,0.05);">
+    © 2025 GamerZone. All rights reserved.
+  </div>
+</footer>
 
-
-<!-- Scripts -->
 <script src="js/popper.min.js"></script>
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/bootstrap-4.3.1.js"></script>

@@ -1,5 +1,22 @@
 <?php
 // laptop.php
+
+// Database connection (same as admin_action.php)
+$servername = "localhost";   // your DB server
+$username = "root";          // your DB username
+$password = "";              // your DB password
+$dbname = "gamezone";  // replace with your DB name
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch all laptops from database
+$sql = "SELECT * FROM laptops";
+$result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,101 +25,27 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Laptop Showcase</title>
-
-  <!-- Bootstrap -->
   <link href="css/bootstrap-4.3.1.css" rel="stylesheet" />
-
   <style>
-    body {
-      background-image: url('images/background1.jpg');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
-    .navbar {
-      background-color: rgba(10, 10, 30, 0.9);
-    }
-
-    .navbar .navbar-brand,
-    .navbar-nav .nav-link {
-      color: #ffffff !important;
-    }
-
-    .navbar .nav-link:hover {
-      color: #00ffcc !important;
-    }
-
-    .search-bar {
-      background-color: #222;
-      color: white;
-      border: 1px solid #444;
-      padding: 8px 12px;
-      border-radius: 8px;
-    }
-
-    h1 {
-      color: #ffffff;
-      text-align: center;
-      margin: 50px 0 30px;
-      text-shadow: 0 0 10px #00ffff;
-    }
-
-    .card {
-      background-color: rgba(0, 0, 0, 0.6);
-      color: white;
-      border: none;
-      min-height: 550px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 0 15px red;
-    }
-
-    .card-img-top {
-      height: 250px;
-      object-fit: cover;
-    }
-
-    .carousel-inner img {
-      width: 100%;
-      height: 60%;
-      object-fit: cover;
-    }
-
-    .btn-primary {
-      background-color: #00bfff;
-      border: none;
-    }
-
-    .btn-primary:hover {
-      background-color: #0080ff;
-    }
-
-    .carousel-caption h5,
-    .carousel-caption p {
-      text-shadow: 2px 2px 5px black;
-    }
-
-    /* Remove gutters for full-width cards */
-    .no-gutters {
-      margin-left: 0;
-      margin-right: 0;
-    }
-    .row.no-gutters > [class*='col-'] {
-      padding-left: 0;
-      padding-right: 0;
-    }
+    body { background-image: url('images/background1.jpg'); background-size: cover; background-position: center; background-attachment: fixed; font-family: 'Segoe UI', sans-serif; }
+    .navbar { background-color: rgba(10, 10, 30, 0.9); }
+    .navbar .navbar-brand, .navbar-nav .nav-link { color: #ffffff !important; }
+    .navbar .nav-link:hover { color: #00ffcc !important; }
+    .search-bar { background-color: #222; color: white; border: 1px solid #444; padding: 8px 12px; border-radius: 8px; }
+    h1 { color: #ffffff; text-align: center; margin: 50px 0 30px; text-shadow: 0 0 10px #00ffff; }
+    .card { background-color: rgba(0, 0, 0, 0.6); color: white; border: none; min-height: 550px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .card:hover { transform: translateY(-10px); box-shadow: 0 0 15px red; }
+    .card-img-top { height: 250px; object-fit: cover; }
+    .carousel-inner img { width: 100%; height: 60%; object-fit: cover; }
+    .btn-primary { background-color: #00bfff; border: none; }
+    .btn-primary:hover { background-color: #0080ff; }
+    .carousel-caption h5, .carousel-caption p { text-shadow: 2px 2px 5px black; }
+    .no-gutters { margin-left: 0; margin-right: 0; }
+    .row.no-gutters > [class*='col-'] { padding-left: 0; padding-right: 0; }
   </style>
 </head>
-
 <body>
 <div class="container-fluid px-0">
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark">
   <a class="navbar-brand" href="web1.php">GamingZone</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
@@ -116,64 +59,142 @@
       <li class="nav-item"> <a class="nav-link" href="console.php">Gaming Consoles</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console_games.php">Console Games</a> </li>
     </ul>
-    <form class="form-inline">
-      <input class="search-bar" type="search" placeholder="Search" />
+
+    <!-- Search bar -->
+    <form class="form-inline my-2 my-lg-0">
+      <input class="search-bar mr-2" type="search" placeholder="Search" />
       <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
     </form>
+
+    <!-- Account dropdown aligned right -->
+    <div class="dropdown ml-3">
+      <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <img src="images/login.png" alt="User" class="account-img">
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
+        <a class="dropdown-item" href="signup.php">Sign Up</a>
+        <a class="dropdown-item" href="index.php">Login</a>
+      </div>
+    </div>
   </div>
 </nav>
 
-<br>
 
-  <!-- Carousel -->
-  <div class="px-3 px-md-5">
-    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-      <ol class="carousel-indicators">
-        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-      </ol>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img class="d-block w-100 rounded" src="images/laptopimg10.jpg" alt="Slide 1" height="600" />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Design Meets Power</h5>
-            <p>Ignite your gameplay with firepower that melts the competition.</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img class="d-block w-100 rounded" src="images/laptopimg5.jpg" alt="Slide 2" height="600" />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>RGB Revolution</h5>
-            <p>Unleash performance with the ultimate gaming laptops.</p>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <img class="d-block w-100 rounded" src="images/laptopimg6.jpg" alt="Slide 3" height="600" />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Power in Your Hands</h5>
-            <p>Experience 360° action with stunning clarity.</p>
-          </div>
+<br>
+<style>
+  body { 
+    background-image: url('images/background1.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: fixed; 
+    font-family: 'Segoe UI', sans-serif; 
+  }
+  .navbar { background-color: rgba(10, 10, 30, 0.9); }
+  .navbar .navbar-brand, .navbar-nav .nav-link { color: #ffffff !important; }
+  .navbar .nav-link:hover { color: #00ffcc !important; }
+  .search-bar { background-color: #222; color: white; border: 1px solid #444; padding: 8px 12px; border-radius: 8px; }
+  h1 { color: #ffffff; text-align: center; margin: 50px 0 30px; text-shadow: 0 0 10px #00ffff; }
+  .card { background-color: rgba(0, 0, 0, 0.6); color: white; border: none; min-height: 550px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+  .card:hover { transform: translateY(-10px); box-shadow: 0 0 15px red; }
+  .card-img-top { height: 250px; object-fit: cover; }
+  .carousel-inner img { width: 100%; height: 60%; object-fit: cover; }
+  .btn-primary { background-color: #00bfff; border: none; }
+  .btn-primary:hover { background-color: #0080ff; }
+  .carousel-caption h5, .carousel-caption p { text-shadow: 2px 2px 5px black; }
+  .no-gutters { margin-left: 0; margin-right: 0; }
+  .row.no-gutters > [class*='col-'] { padding-left: 0; padding-right: 0; }
+
+  /* Dropdown account button custom style */
+  .account-btn {
+    border: none;
+    background: none;        /* remove background color */
+    padding: 0;              /* remove padding */
+    width: auto;             /* adjust to image width */
+    height: auto;            /* adjust to image height */
+  }
+
+  .account-img {
+    width: 50px;             /* image width */
+    height: 50px;            /* image height */
+    object-fit: cover;
+  }
+
+  /* Dropdown menu dark theme */
+  .dropdown-menu {
+    background-color: rgba(10, 10, 30, 0.95); /* dark background */
+    border: none;
+    min-width: 150px;
+  }
+
+  /* Dropdown links */
+  .dropdown-item {
+    color: #00ffff;       /* neon cyan text */
+    background-color: transparent;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* Hover effect for dropdown links */
+  .dropdown-item:hover {
+    background-color: #00bfff;  /* bright blue background on hover */
+    color: #ffffff;             /* white text on hover */
+  }
+
+  /* Remove dropdown arrow to match image style */
+  .dropdown-toggle::after {
+    display: none;
+  }
+</style>
+
+<!-- Carousel -->
+<div class="px-3 px-md-5">
+  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="d-block w-100 rounded" src="images/laptopimg10.jpg" alt="Slide 1" height="600" />
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Design Meets Power</h5>
+          <p>Ignite your gameplay with firepower that melts the competition.</p>
         </div>
       </div>
-      <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev"> 
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span> 
-        <span class="sr-only">Previous</span> 
-      </a>
-      <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next"> 
-        <span class="carousel-control-next-icon" aria-hidden="true"></span> 
-        <span class="sr-only">Next</span> 
-      </a>
+      <div class="carousel-item">
+        <img class="d-block w-100 rounded" src="images/laptopimg5.jpg" alt="Slide 2" height="600" />
+        <div class="carousel-caption d-none d-md-block">
+          <h5>RGB Revolution</h5>
+          <p>Unleash performance with the ultimate gaming laptops.</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100 rounded" src="images/laptopimg6.jpg" alt="Slide 3" height="600" />
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Power in Your Hands</h5>
+          <p>Experience 360° action with stunning clarity.</p>
+        </div>
+      </div>
     </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev"> 
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span> 
+      <span class="sr-only">Previous</span> 
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next"> 
+      <span class="carousel-control-next-icon" aria-hidden="true"></span> 
+      <span class="sr-only">Next</span> 
+    </a>
   </div>
+</div>
 
-  <!-- Title -->
-  <h1>Our New Arrivals Are Here</h1>
+<!-- Title -->
+<h1>Our New Arrivals Are Here</h1>
 
-  <!-- Product Cards -->
-  <div class="row no-gutters px-3">
-  <?php
-$products = [
+<!-- Product Cards -->
+<div class="row no-gutters px-3">
+<?php
+// 1️⃣ Static laptops (always shown first)
+$staticProducts = [
     [
         'name'=>'MSI Katana 17 B14WGK Intel',
         'price'=>'685000',
@@ -270,54 +291,74 @@ $products = [
         'image'=>'images/lapcardimg20.png',
         'description'=>'Intel Core™ Ultra 9 285H (24MB Cache, up to 5.4 GHz, 16 cores, 16 Threads) 32GB LPDDR5X 1TB PCIe NVMe M.2 SSD 3K (2880 x 1800) OLED 120Hz 500nits HDR peak brightness Intel Arc Graphics Backlit Soft Keyboard 1.65KG, 95WHr 2 Years Company Warranty Genuine Windows 11 Home'
     ],
+    
 ];
 
+// Display static laptops first
+foreach ($staticProducts as $product) {
+    echo '<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">';
+    echo '  <div class="card h-100">';
+    echo '    <img class="card-img-top" src="'.$product['image'].'" alt="'.$product['name'].'">';
+    echo '    <div class="card-body">';
+    echo '      <h5 class="card-title">'.$product['name'].'</h5>';
+    echo '      <h5 class="card-title">'.$product['price'].' LKR</h5>';
+    echo '      <p class="card-text">'.$product['description'].'</p>';
+    echo '      <button class="btn btn-primary" onclick="buyProduct(\''.$product['name'].'\', \''.$product['price'].'\', \''.$product['image'].'\')">Buy Now</button>';
+    echo '    </div>';
+    echo '  </div>';
+    echo '</div>';
+}
 
+// 2️⃣ Database laptops (admin-added)
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        echo '<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">';
+        echo '  <div class="card h-100">';
+        echo '    <img class="card-img-top" src="uploads/'.$row['image'].'" alt="'.$row['name'].'">';
+        echo '    <div class="card-body">';
+        echo '      <h5 class="card-title">'.$row['name'].'</h5>';
+        echo '      <h5 class="card-title">'.$row['price'].' LKR</h5>';
+        echo '      <p class="card-text">'.$row['specs'].'</p>'; // from database
+        echo '      <button class="btn btn-primary" onclick="buyProduct(\''.$row['name'].'\', \''.$row['price'].'\', \'uploads/'.$row['image'].'\')">Buy Now</button>';
+        echo '    </div>';
+        echo '  </div>';
+        echo '</div>';
+    }
+} else {
+    echo '<p class="text-white">No laptops available.</p>';
+}
+$conn->close();
+?>
 
-  foreach ($products as $product) {
-      echo '<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">';
-      echo '  <div class="card h-100">';
-      echo '    <img class="card-img-top" src="'.$product['image'].'" alt="Card image cap">';
-      echo '    <div class="card-body">';
-      echo '      <h5 class="card-title">'.$product['name'].'</h5>';
-      echo '      <h5 class="card-title">'.$product['price'].' LKR</h5>';
-      echo '      <p class="card-text">'.$product['description'].'</p>';
-      echo '      <button class="btn btn-primary" onclick="buyProduct(\''.$product['name'].'\', \''.$product['price'].'\', \''.$product['image'].'\')">Buy Now</button>';
-      echo '    </div>';
-      echo '  </div>';
-      echo '</div>';
-  }
-  ?>
-  </div>
+</div>
 
-  <!-- Footer -->
-  <footer class="text-center text-lg-start text-white mt-5" style="background-color: #111;">
-    <div class="container p-4">
-      <div class="row">
-        <div class="col-md-4 mb-4">
-          <h6 class="text-uppercase fw-bold">GamerZone</h6>
-          <p>Powering your play with the latest in gaming laptops, accessories, and VR tech.</p>
-        </div>
-        <div class="col-md-4 mb-4">
-          <h6 class="text-uppercase fw-bold">Quick Links</h6>
-          <ul class="list-unstyled">
-            <li><a href="web1.php" class="text-white">Home</a></li>
-            <li><a href="contact.php" class="text-white">Contact Us</a></li>
-            <li><a href="contact.php" class="text-white">Feedback</a></li>
-          </ul>
-        </div>
-        <div class="col-md-4 mb-4">
-          <h6 class="text-uppercase fw-bold">Contact</h6>
-          <p>Email: support@gamerzone.com</p>
-          <p>Phone: +94 71 123 4567</p>
-        </div>
+<!-- Footer -->
+<footer class="text-center text-lg-start text-white mt-5" style="background-color: #111;">
+  <div class="container p-4">
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <h6 class="text-uppercase fw-bold">GamerZone</h6>
+        <p>Powering your play with the latest in gaming laptops, accessories, and VR tech.</p>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h6 class="text-uppercase fw-bold">Quick Links</h6>
+        <ul class="list-unstyled">
+          <li><a href="web1.php" class="text-white">Home</a></li>
+          <li><a href="contact.php" class="text-white">Contact Us</a></li>
+          <li><a href="contact.php" class="text-white">Feedback</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h6 class="text-uppercase fw-bold">Contact</h6>
+        <p>Email: support@gamerzone.com</p>
+        <p>Phone: +94 71 123 4567</p>
       </div>
     </div>
-    <div class="text-center p-3" style="background-color: rgba(255,255,255,0.05);">
-      © 2025 GamerZone. All rights reserved.
-    </div>
-  </footer>
-
+  </div>
+  <div class="text-center p-3" style="background-color: rgba(255,255,255,0.05);">
+    © 2025 GamerZone. All rights reserved.
+  </div>
+</footer>
 </div> <!-- END container-fluid -->
 
 <!-- Scripts -->
