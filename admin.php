@@ -238,13 +238,5 @@ footer {
 <script src="js/popper.min.js"></script>
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/bootstrap-4.3.1.js"></script>
-<script>
-function buyProduct(productName, price, imagePath) {
-  const encodedName = encodeURIComponent(productName);
-  const encodedPrice = encodeURIComponent(price);
-  const encodedImage = encodeURIComponent(imagePath);
-  window.location.href = `billing-page.php?product=${encodedName}&price=${encodedPrice}&image=${encodedImage}`;
-}
-</script>
 </body>
 </html>

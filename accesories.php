@@ -1,6 +1,15 @@
 <?php
 // accessories.php
 
+// Include cart functions
+require_once 'cart_functions.php';
+
+// Initialize cart session
+initCartSession();
+
+// Check for cart messages
+$cartMessage = getCartMessage();
+
 // Database connection
 $conn = new mysqli("localhost", "root", "", "gamezone");
 if ($conn->connect_error) {
@@ -17,6 +26,8 @@ if ($conn->connect_error) {
 
   <!-- Bootstrap -->
   <link href="css/bootstrap-4.3.1.css" rel="stylesheet" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
   <style>
     body {
@@ -90,6 +101,21 @@ if ($conn->connect_error) {
       <input class="search-bar" type="search" placeholder="Search" />
       <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
     </form>
+
+    <!-- Cart Icon -->
+    <a href="cart.php" class="ml-3 mr-3 position-relative">
+      <span class="cart-icon">
+        <i class="fas fa-shopping-cart" style="color: #00ffff; font-size: 24px;"></i>
+        <?php 
+        $cartCount = getCartItemCount();
+        if($cartCount > 0): 
+        ?>
+        <span style="position: absolute; top: -10px; right: -10px; background-color: #ff3860; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+          <?php echo $cartCount; ?>
+        </span>
+        <?php endif; ?>
+      </span>
+    </a>
   </div>
 </nav>
 <br>
@@ -137,6 +163,15 @@ if ($conn->connect_error) {
 
 <h1>Our Latest Accessories</h1>
 
+<?php if($cartMessage): ?>
+<div class="alert alert-<?php echo $cartMessage['type']; ?> alert-dismissible fade show container" role="alert">
+  <?php echo $cartMessage['message']; ?>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<?php endif; ?>
+
 <div class="container">
   <div class="row">
     <?php
@@ -151,7 +186,14 @@ if ($conn->connect_error) {
                 <div class="card-body">
                   <h5 class="card-title">'.$row['name'].'</h5>
                   <p>'.number_format($row['price']).' LKR</p>
-                  <button class="btn btn-primary" onclick="buyProduct(\''.$row['name'].'\', \''.$row['price'].'\', \'uploads/'.$row['image'].'\')">Buy Now</button>
+                  <form action="cart_action.php" method="post">
+                    <input type="hidden" name="product_id" value="'.$row['id'].'">
+                    <input type="hidden" name="product_name" value="'.$row['name'].'">
+                    <input type="hidden" name="product_price" value="'.$row['price'].'">
+                    <input type="hidden" name="product_image" value="uploads/'.$row['image'].'">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" name="add_to_cart" class="btn btn-primary btn-block"><i class="fas fa-shopping-cart mr-2"></i> Add to Cart</button>
+                  </form>
                 </div>
               </div>
             </div>';
@@ -179,7 +221,14 @@ if ($conn->connect_error) {
             <div class="card-body">
               <h5 class="card-title">'.$p['name'].'</h5>
               <p>'.number_format($p['price']).' LKR</p>
-              <button class="btn btn-primary" onclick="buyProduct(\''.$p['name'].'\', \''.$p['price'].'\', \''.$p['image'].'\')">Buy Now</button>
+              <form action="cart_action.php" method="post">
+                <input type="hidden" name="product_id" value="acc_'.md5($p['name']).'">
+                <input type="hidden" name="product_name" value="'.$p['name'].'">
+                <input type="hidden" name="product_price" value="'.$p['price'].'">
+                <input type="hidden" name="product_image" value="'.$p['image'].'">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" name="add_to_cart" class="btn btn-primary btn-block"><i class="fas fa-shopping-cart mr-2"></i> Add to Cart</button>
+              </form>
             </div>
           </div>
         </div>';
@@ -221,13 +270,5 @@ if ($conn->connect_error) {
 <script src="js/popper.min.js"></script>
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/bootstrap-4.3.1.js"></script>
-<script>
-function buyProduct(productName, price, imagePath) {
-  const encodedName = encodeURIComponent(productName);
-  const encodedPrice = encodeURIComponent(price);
-  const encodedImage = encodeURIComponent(imagePath);
-  window.location.href = `billing-page.php?product=${encodedName}&price=${encodedPrice}&image=${encodedImage}`;
-}
-</script>
 </body>
 </html>

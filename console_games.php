@@ -1,5 +1,14 @@
 <?php
 // console_games.php
+
+// Include cart functions
+require_once 'cart_functions.php';
+
+// Initialize cart session
+initCartSession();
+
+// Check for cart messages
+$cartMessage = getCartMessage();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,6 +20,8 @@
 
   <!-- Bootstrap -->
   <link href="css/bootstrap-4.3.1.css" rel="stylesheet" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
   <style>
     body {
@@ -31,12 +42,39 @@
       color: #00ffcc !important;
     }
     .account-btn {
-  border: none;
-  background: none;
-  padding: 0;
-  width: auto;
-  height: auto;
-}
+      background: transparent;
+      border: 2px solid #17a2b8;
+      border-radius: 25px;
+      padding: 8px 16px;
+      color: #17a2b8;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+    .account-btn:hover {
+      background-color: #17a2b8;
+      border-color: #17a2b8;
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+    }
+    .account-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.25);
+      background-color: #17a2b8;
+      border-color: #17a2b8;
+      color: #fff;
+    }
+    .account-btn-icon {
+      margin-right: 6px;
+      font-size: 1em;
+    }
+    .account-img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+    }
 .account-img {
   width: 50px;
   height: 50px;
@@ -125,20 +163,46 @@
       <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
     </form>
 
-    <!-- Dropdown Button (copied from web1.php) -->
+    <!-- Cart Icon -->
+    <a href="cart.php" class="ml-3 mr-3 position-relative">
+      <span class="cart-icon">
+        <i class="fas fa-shopping-cart" style="color: #00ffff; font-size: 24px;"></i>
+        <?php 
+        $cartCount = getCartItemCount();
+        if($cartCount > 0): 
+        ?>
+        <span style="position: absolute; top: -10px; right: -10px; background-color: #ff3860; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+          <?php echo $cartCount; ?>
+        </span>
+        <?php endif; ?>
+      </span>
+    </a>
+
+    <!-- Modern Login Button -->
     <div class="dropdown ml-3">
       <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <img src="images/login.png" alt="User" class="account-img">
+        <i class="fas fa-user account-btn-icon"></i>Account
       </button>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
-        <a class="dropdown-item" href="signup.php">Sign Up</a>
-        <a class="dropdown-item" href="login.php">Login</a>
+        <a class="dropdown-item" href="signup.php"><i class="fas fa-user-plus mr-2"></i>Sign Up</a>
+        <a class="dropdown-item" href="login.php"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
       </div>
     </div>
 
   </div>
 </nav>
 
+<!-- Cart Message Section -->
+<div class="container mt-3">
+  <?php if ($cartMessage): ?>
+    <div class="alert <?php echo strpos($cartMessage, 'Added') !== false ? 'alert-success' : 'alert-info'; ?> alert-dismissible fade show" role="alert">
+      <?php echo $cartMessage; ?>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  <?php endif; ?>
+</div>
 
 <br>
 
@@ -213,7 +277,16 @@ foreach ($products as $product) {
         <div class="card-body">
           <h5 class="card-title">'.$product["name"].'</h5>
           <h5 class="card-title">'.number_format($product["price"]).' LKR</h5>
-          <button class="btn btn-primary" onclick="buyProduct(\''.$product["name"].'\', \''.$product["price"].'\', \''.$product["image"].'\')">Buy Now</button>
+          <form action="cart_action.php" method="post">
+            <input type="hidden" name="product_id" value="console_game_'.md5($product["name"]).'">
+            <input type="hidden" name="product_name" value="'.$product["name"].'">
+            <input type="hidden" name="product_price" value="'.$product["price"].'">
+            <input type="hidden" name="product_image" value="'.$product["image"].'">
+            <input type="hidden" name="action" value="add">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-cart-plus"></i> Add to Cart
+            </button>
+          </form>
         </div>
       </div>
     </div>';
@@ -236,7 +309,16 @@ if($result && $result->num_rows > 0){
               <h5 class="card-title">'.$row["name"].'</h5>
               <h5 class="card-title">'.number_format($row["price"]).' LKR</h5>
               <p class="card-text">'.$row["specs"].'</p>
-              <button class="btn btn-primary" onclick="buyProduct(\''.$row["name"].'\', \''.$row["price"].'\', \'uploads/'.$row["image"].'\')">Buy Now</button>
+              <form action="cart_action.php" method="post">
+                <input type="hidden" name="product_id" value="db_console_game_'.$row["id"].'">
+                <input type="hidden" name="product_name" value="'.$row["name"].'">
+                <input type="hidden" name="product_price" value="'.$row["price"].'">
+                <input type="hidden" name="product_image" value="uploads/'.$row["image"].'">
+                <input type="hidden" name="action" value="add">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-cart-plus"></i> Add to Cart
+                </button>
+              </form>
             </div>
           </div>
         </div>';
@@ -282,13 +364,5 @@ $conn->close();
 <script src="js/popper.min.js"></script>
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/bootstrap-4.3.1.js"></script>
-<script>
-function buyProduct(productName, price, imagePath) {
-  const encodedName = encodeURIComponent(productName);
-  const encodedPrice = encodeURIComponent(price);
-  const encodedImage = encodeURIComponent(imagePath);
-  window.location.href = `billing-page.php?product=${encodedName}&price=${encodedPrice}&image=${encodedImage}`;
-}
-</script>
 </body>
 </html>

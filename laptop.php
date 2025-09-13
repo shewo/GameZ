@@ -1,6 +1,15 @@
 <?php
 // laptop.php
 
+// Include cart functions
+require_once 'cart_functions.php';
+
+// Initialize cart session
+initCartSession();
+
+// Check for cart messages
+$cartMessage = getCartMessage();
+
 // Database connection (same as admin_action.php)
 $servername = "localhost";   // your DB server
 $username = "root";          // your DB username
@@ -26,6 +35,8 @@ $result = $conn->query($sql);
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Laptop Showcase</title>
   <link href="css/bootstrap-4.3.1.css" rel="stylesheet" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
   <style>
     body { background-image: url('images/background1.jpg'); background-size: cover; background-position: center; background-attachment: fixed; font-family: 'Segoe UI', sans-serif; }
     .navbar { background-color: rgba(10, 10, 30, 0.9); }
@@ -66,14 +77,29 @@ $result = $conn->query($sql);
       <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
     </form>
 
-    <!-- Account dropdown aligned right -->
+    <!-- Cart Icon -->
+    <a href="cart.php" class="ml-3 mr-3 position-relative">
+      <span class="cart-icon">
+        <i class="fas fa-shopping-cart" style="color: #00ffff; font-size: 24px;"></i>
+        <?php 
+        $cartCount = getCartItemCount();
+        if($cartCount > 0): 
+        ?>
+        <span style="position: absolute; top: -10px; right: -10px; background-color: #ff3860; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+          <?php echo $cartCount; ?>
+        </span>
+        <?php endif; ?>
+      </span>
+    </a>
+
+    <!-- Modern Login Button -->
     <div class="dropdown ml-3">
       <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <img src="images/login.png" alt="User" class="account-img">
+        <i class="fas fa-user account-btn-icon"></i>Account
       </button>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
-        <a class="dropdown-item" href="signup.php">Sign Up</a>
-        <a class="dropdown-item" href="index.php">Login</a>
+        <a class="dropdown-item" href="signup.php"><i class="fas fa-user-plus mr-2"></i>Sign Up</a>
+        <a class="dropdown-item" href="login.php"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
       </div>
     </div>
   </div>
@@ -104,13 +130,38 @@ $result = $conn->query($sql);
   .no-gutters { margin-left: 0; margin-right: 0; }
   .row.no-gutters > [class*='col-'] { padding-left: 0; padding-right: 0; }
 
-  /* Dropdown account button custom style */
+  /* Modern Login Button Styles - Search Button Theme */
   .account-btn {
-    border: none;
-    background: none;        /* remove background color */
-    padding: 0;              /* remove padding */
-    width: auto;             /* adjust to image width */
-    height: auto;            /* adjust to image height */
+    background: transparent;
+    border: 2px solid #17a2b8;
+    border-radius: 25px;
+    padding: 8px 16px;
+    color: #17a2b8;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+  }
+  
+  .account-btn:hover {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+  }
+  
+  .account-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.25);
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: #fff;
+  }
+  
+  .account-btn-icon {
+    margin-right: 6px;
+    font-size: 1em;
   }
 
   .account-img {
@@ -189,6 +240,15 @@ $result = $conn->query($sql);
 
 <!-- Title -->
 <h1>Our New Arrivals Are Here</h1>
+
+<?php if($cartMessage): ?>
+<div class="alert alert-<?php echo $cartMessage['type']; ?> alert-dismissible fade show" role="alert">
+  <?php echo $cartMessage['message']; ?>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<?php endif; ?>
 
 <!-- Product Cards -->
 <div class="row no-gutters px-3">
@@ -295,7 +355,7 @@ $staticProducts = [
 ];
 
 // Display static laptops first
-foreach ($staticProducts as $product) {
+foreach ($staticProducts as $index => $product) {
     echo '<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">';
     echo '  <div class="card h-100">';
     echo '    <img class="card-img-top" src="'.$product['image'].'" alt="'.$product['name'].'">';
@@ -303,7 +363,13 @@ foreach ($staticProducts as $product) {
     echo '      <h5 class="card-title">'.$product['name'].'</h5>';
     echo '      <h5 class="card-title">'.$product['price'].' LKR</h5>';
     echo '      <p class="card-text">'.$product['description'].'</p>';
-    echo '      <button class="btn btn-primary" onclick="buyProduct(\''.$product['name'].'\', \''.$product['price'].'\', \''.$product['image'].'\')">Buy Now</button>';
+    echo '      <form action="cart_action.php" method="post">';
+    echo '        <input type="hidden" name="product_id" value="static_'.$index.'">';
+    echo '        <input type="hidden" name="product_name" value="'.$product['name'].'">';
+    echo '        <input type="hidden" name="product_price" value="'.$product['price'].'">';
+    echo '        <input type="hidden" name="product_image" value="'.$product['image'].'">';
+    echo '        <input type="hidden" name="quantity" value="1">';
+    echo '        <button type="submit" name="add_to_cart" class="btn btn-primary btn-block"><i class="fas fa-shopping-cart mr-2"></i> Add to Cart</button>';
     echo '    </div>';
     echo '  </div>';
     echo '</div>';
@@ -319,7 +385,16 @@ if ($result->num_rows > 0) {
         echo '      <h5 class="card-title">'.$row['name'].'</h5>';
         echo '      <h5 class="card-title">'.$row['price'].' LKR</h5>';
         echo '      <p class="card-text">'.$row['specs'].'</p>'; // from database
-        echo '      <button class="btn btn-primary" onclick="buyProduct(\''.$row['name'].'\', \''.$row['price'].'\', \'uploads/'.$row['image'].'\')">Buy Now</button>';
+        
+        // Create Add to Cart form
+        echo '      <form action="cart_action.php" method="post">';
+        echo '        <input type="hidden" name="product_id" value="'.$row['id'].'">';
+        echo '        <input type="hidden" name="product_name" value="'.$row['name'].'">';
+        echo '        <input type="hidden" name="product_price" value="'.$row['price'].'">';
+        echo '        <input type="hidden" name="product_image" value="uploads/'.$row['image'].'">';
+        echo '        <input type="hidden" name="quantity" value="1">';
+        echo '        <button type="submit" name="add_to_cart" class="btn btn-primary btn-block"><i class="fas fa-shopping-cart mr-2"></i> Add to Cart</button>';
+        echo '      </form>';
         echo '    </div>';
         echo '  </div>';
         echo '</div>';
@@ -365,15 +440,5 @@ $conn->close();
 <script src="js/popper.min.js"></script>
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/bootstrap-4.3.1.js"></script>
-
-<script>
-function buyProduct(productName, price, imagePath) {
-    const encodedName = encodeURIComponent(productName);
-    const encodedPrice = encodeURIComponent(price);
-    const encodedImage = encodeURIComponent(imagePath);
-    window.location.href = `billing-page.php?product=${encodedName}&price=${encodedPrice}&image=${encodedImage}`;
-}
-</script>
-
 </body>
 </html>

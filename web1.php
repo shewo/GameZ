@@ -1,5 +1,10 @@
 <?php
 // index.php
+// Include the cart functions
+require_once 'cart_functions.php';
+
+// Initialize cart session
+initCartSession();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,6 +16,8 @@
 
   <!-- Bootstrap -->
   <link href="css/bootstrap-4.3.1.css" rel="stylesheet" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
   <style>
     body {
@@ -48,13 +55,39 @@
       padding: 8px 12px;
       border-radius: 8px;
     }
+   /* Modern Login Button Styles - Search Button Theme */
    .account-btn {
-  border: none;
-  background: none;        /* remove background color */
-  padding: 0;              /* remove padding */
-  width: auto;             /* adjust to image width */
-  height: auto;            /* adjust to image height */
-}
+     background: transparent;
+     border: 2px solid #17a2b8;
+     border-radius: 25px;
+     padding: 8px 16px;
+     color: #17a2b8;
+     font-weight: 500;
+     text-transform: uppercase;
+     letter-spacing: 1px;
+     transition: all 0.3s ease;
+   }
+   
+   .account-btn:hover {
+     background-color: #17a2b8;
+     border-color: #17a2b8;
+     color: #fff;
+     transform: translateY(-1px);
+     box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+   }
+   
+   .account-btn:focus {
+     outline: none;
+     box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.25);
+     background-color: #17a2b8;
+     border-color: #17a2b8;
+     color: #fff;
+   }
+   
+   .account-btn-icon {
+     margin-right: 6px;
+     font-size: 1em;
+   }
 
 .account-img {
   width: 50px;             /* image width */
@@ -147,14 +180,30 @@
       <input class="search-bar" type="search" placeholder="Search" />
       <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
     </form>
-<!-- Dropdown Button -->
-<div class="dropdown ml-3">
+
+    <!-- Cart Icon -->
+    <a href="cart.php" class="ml-3 mr-3 position-relative">
+      <span class="cart-icon">
+        <i class="fas fa-shopping-cart" style="color: #00ffff; font-size: 24px;"></i>
+        <?php 
+        $cartCount = getCartItemCount();
+        if($cartCount > 0): 
+        ?>
+        <span style="position: absolute; top: -10px; right: -10px; background-color: #ff3860; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+          <?php echo $cartCount; ?>
+        </span>
+        <?php endif; ?>
+      </span>
+    </a>
+
+<!-- Modern Login Button -->
+<div class="dropdown ml-2">
   <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <img src="images/login.png" alt="User" class="account-img">
+    <i class="fas fa-user account-btn-icon"></i>Account
   </button>
   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
-    <a class="dropdown-item" href="signup.php">Sign Up</a>
-    <a class="dropdown-item" href="login.php">Login</a>
+    <a class="dropdown-item" href="signup.php"><i class="fas fa-user-plus mr-2"></i>Sign Up</a>
+    <a class="dropdown-item" href="login.php"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
   </div>
 </div>
 
