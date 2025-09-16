@@ -1,5 +1,11 @@
 
 <?php
+// Include cart functions
+require_once 'cart_functions.php';
+
+// Initialize cart session
+initCartSession();
+
 // Initialize variables for form data and messages
 $successMessage = "";
 $errorMessage = "";
@@ -153,6 +159,56 @@ function isSelected($fieldName, $value) {
             border: 1px solid #444;     
             padding: 8px 12px;          
             border-radius: 8px;         
+        }
+        
+        .account-btn {
+            background: transparent;
+            border: 2px solid #17a2b8;
+            border-radius: 25px;
+            padding: 8px 16px;
+            color: #17a2b8;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .account-btn:hover {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+        }
+        
+        .account-btn-icon {
+            margin-right: 6px;
+            font-size: 1em;
+        }
+        
+        /* Dropdown menu dark theme */
+        .dropdown-menu {
+            background-color: rgba(10, 10, 30, 0.95);
+            border: none;
+            min-width: 150px;
+        }
+        
+        /* Dropdown links */
+        .dropdown-item {
+            color: #00ffff;
+            background-color: transparent;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        /* Hover effect for dropdown links */
+        .dropdown-item:hover {
+            background-color: #00bfff;
+            color: #ffffff;
+        }
+        
+        /* Optional: remove arrow on toggle to match image style */
+        .dropdown-toggle::after {
+            display: none;
         }
 
         h1 {
@@ -484,24 +540,53 @@ function isSelected($fieldName, $value) {
     </style>
 </head>
 <body>
-    <!-- Navbar matching your product pages -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand" href="index.html">GamingZone</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span> 
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                     <li class="nav-item"> <a class="nav-link" href="laptop.html">Laptops</a> </li>
-                     <li class="nav-item"> <a class="nav-link" href="accesories.html">Accessories</a> </li>
-                     <li class="nav-item"> <a class="nav-link" href="console.html">&nbsp;Gaming Consoles&nbsp;</a> </li>
-            </ul>
-            <form class="form-inline">
-                <input class="search-bar" type="search" placeholder="Search" />
-                <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
-            </form>
+      <a class="navbar-brand" href="web1.php">GamingZone</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span> 
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"> <a class="nav-link" href="laptop.php">Laptops</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="accesories.php">Accessories</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="parts.php">Parts</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="console.php">Gaming Consoles</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="console_games.php">Console Games</a> </li>
+        </ul>
+
+        <!-- Search bar -->
+        <form class="form-inline my-2 my-lg-0">
+          <input class="search-bar mr-2" type="search" placeholder="Search" />
+          <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+        <!-- Cart Icon -->
+        <a href="cart.php" class="ml-3 mr-3 position-relative">
+          <span class="cart-icon">
+            <i class="fas fa-shopping-cart" style="color: #00ffff; font-size: 24px;"></i>
+            <?php 
+            $cartCount = getCartItemCount();
+            if($cartCount > 0): 
+            ?>
+            <span style="position: absolute; top: -10px; right: -10px; background-color: #ff3860; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+              <?php echo $cartCount; ?>
+            </span>
+            <?php endif; ?>
+          </span>
+        </a>
+
+        <!-- Modern Login Button -->
+        <div class="dropdown ml-3">
+          <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user account-btn-icon"></i>Account
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
+            <a class="dropdown-item" href="signup.php"><i class="fas fa-user-plus mr-2"></i>Sign Up</a>
+            <a class="dropdown-item" href="login.php"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
+          </div>
         </div>
+      </div>
     </nav><br>
 
     <!-- Hero Section -->
