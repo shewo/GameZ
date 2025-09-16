@@ -79,6 +79,30 @@ if ($conn->connect_error) {
       padding: 8px 12px;
       border-radius: 8px;
     }
+    .account-btn {
+      background: transparent;
+      border: 2px solid #17a2b8;
+      border-radius: 25px;
+      padding: 8px 16px;
+      color: #17a2b8;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+    
+    .account-btn:hover {
+      background-color: #17a2b8;
+      border-color: #17a2b8;
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+    }
+    
+    .account-btn-icon {
+      margin-right: 6px;
+      font-size: 1em;
+    }
   </style>
 </head>
 
@@ -92,13 +116,15 @@ if ($conn->connect_error) {
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item"> <a class="nav-link" href="laptop.php">Laptops</a> </li>
-      <li class="nav-item"> <a class="nav-link active" href="accessories.php">Accessories</a> </li>
+      <li class="nav-item"> <a class="nav-link active" href="accesories.php">Accessories</a> </li>
       <li class="nav-item"> <a class="nav-link" href="parts.php">Parts</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console.php">Gaming Consoles</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console_games.php">Console Games</a> </li>
     </ul>
-    <form class="form-inline">
-      <input class="search-bar" type="search" placeholder="Search" />
+
+    <!-- Search bar -->
+    <form class="form-inline my-2 my-lg-0">
+      <input class="search-bar mr-2" type="search" placeholder="Search" />
       <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
     </form>
 
@@ -116,6 +142,17 @@ if ($conn->connect_error) {
         <?php endif; ?>
       </span>
     </a>
+
+    <!-- Modern Login Button -->
+    <div class="dropdown ml-3">
+      <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-user account-btn-icon"></i>Account
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
+        <a class="dropdown-item" href="signup.php"><i class="fas fa-user-plus mr-2"></i>Sign Up</a>
+        <a class="dropdown-item" href="login.php"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
+      </div>
+    </div>
   </div>
 </nav>
 <br>

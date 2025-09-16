@@ -25,7 +25,7 @@ $cartMessage = getCartMessage();
   <!-- Bootstrap -->
   <link href="css/bootstrap-4.3.1.css" rel="stylesheet" />
   <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
   <style>
     body {
@@ -34,7 +34,20 @@ $cartMessage = getCartMessage();
       background-position: center;
       background-attachment: fixed;
       font-family: 'Segoe UI', sans-serif;
-      color: white;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+    
+    /* Overlay to ensure text readability */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: -1;
     }
 
     .navbar {
@@ -53,10 +66,12 @@ $cartMessage = getCartMessage();
     h1 {
       color: #ffffff;
       text-align: center;
-      margin: 50px 0 30px;
+      margin: 0;
       text-shadow: 0 0 10px #00ffff;
+      font-weight: 600;
+      letter-spacing: 1px;
     }
-
+    
     .search-bar {
       background-color: #222;
       color: white;
@@ -76,6 +91,7 @@ $cartMessage = getCartMessage();
       letter-spacing: 1px;
       transition: all 0.3s ease;
     }
+    
     .account-btn:hover {
       background-color: #17a2b8;
       border-color: #17a2b8;
@@ -83,6 +99,7 @@ $cartMessage = getCartMessage();
       transform: translateY(-1px);
       box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
     }
+    
     .account-btn:focus {
       outline: none;
       box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.25);
@@ -90,6 +107,7 @@ $cartMessage = getCartMessage();
       border-color: #17a2b8;
       color: #fff;
     }
+    
     .account-btn-icon {
       margin-right: 6px;
       font-size: 1em;
@@ -103,22 +121,22 @@ $cartMessage = getCartMessage();
     
     /* Dropdown menu dark theme */
     .dropdown-menu {
-      background-color: rgba(10, 10, 30, 0.95); /* dark background */
+      background-color: rgba(10, 10, 30, 0.95);
       border: none;
       min-width: 150px;
     }
     
     /* Dropdown links */
     .dropdown-item {
-      color: #00ffff;       /* neon cyan text */
+      color: #00ffff;
       background-color: transparent;
       transition: background 0.3s, color 0.3s;
     }
     
     /* Hover effect for dropdown links */
     .dropdown-item:hover {
-      background-color: #00bfff;  /* bright blue background on hover */
-      color: #ffffff;             /* white text on hover */
+      background-color: #00bfff;
+      color: #ffffff;
     }
     
     /* Optional: remove arrow on toggle to match image style */
@@ -147,67 +165,197 @@ $cartMessage = getCartMessage();
       justify-content: center;
     }
     
+    /* Hero section styling similar to contact page */
+    .hero-section {
+      padding: 60px 0 30px 0;
+      position: relative;
+      color: white;
+      text-align: center;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+    
+    /* Cart container styling */
     .cart-container {
-      background-color: rgba(0, 0, 0, 0.7);
-      border-radius: 10px;
-      padding: 30px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 15px;
+      box-shadow: 
+        0 10px 30px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+      padding: 40px;
+      position: relative;
+      z-index: 3;
+      backdrop-filter: blur(15px);
       margin-bottom: 50px;
     }
     
+    /* Hero section styling like contact page */
+    .hero-section {
+      padding: 80px 0 40px 0;
+      position: relative;
+      color: white;
+      background: rgba(0, 0, 0, 0.3);
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+    
+    /* Cart table styling */
     .cart-table {
       color: white;
+      margin-bottom: 2rem;
     }
     
     .cart-table th {
-      background-color: rgba(0, 150, 150, 0.5);
+      background-color: rgba(0, 191, 255, 0.2);
       color: white;
+      border-color: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      font-weight: 500;
     }
     
     .cart-table td {
       vertical-align: middle;
+      border-color: rgba(255, 255, 255, 0.1);
+      padding: 15px;
     }
     
     .product-image {
       max-width: 80px;
       max-height: 80px;
+      border-radius: 8px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
     }
     
     .quantity-input {
       width: 60px;
-      background-color: rgba(20, 20, 40, 0.8);
-      color: white;
-      border: 1px solid #00ffff;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+      color: #ffffff;
+      min-height: 48px;
       text-align: center;
     }
     
+    .quantity-input:focus {
+      background: rgba(255,255,255,0.15);
+      border-color: #00bfff;
+      box-shadow: 0 0 0 0.2rem rgba(0,191,255,0.25);
+      color: #ffffff;
+      outline: none;
+    }
+    
+    /* Button styling */
     .btn-remove {
-      background-color: #ff3860;
+      background-color: rgba(255, 56, 96, 0.8);
       color: white;
       border: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      padding: 10px 15px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    
+    .btn-remove:hover {
+      background-color: rgba(255, 56, 96, 1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(255, 56, 96, 0.3);
     }
     
     .btn-update {
-      background-color: #00bfff;
+      background-color: rgba(0, 191, 255, 0.8);
       color: white;
       border: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      padding: 10px 15px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
     }
     
+    .btn-update:hover {
+      background-color: rgba(0, 191, 255, 1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 191, 255, 0.3);
+    }
+    
+    .btn-outline-info {
+      border: 2px solid #00bfff;
+      color: #00bfff;
+      background: transparent;
+      border-radius: 8px;
+      padding: 10px 20px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    
+    .btn-outline-info:hover {
+      background-color: #00bfff;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 191, 255, 0.3);
+    }
+    
+    .btn-outline-danger {
+      border: 2px solid #ff3860;
+      color: #ff3860;
+      background: transparent;
+      border-radius: 8px;
+      padding: 10px 20px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    
+    .btn-outline-danger:hover {
+      background-color: #ff3860;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 56, 96, 0.3);
+    }
+    
+    /* Cart summary styling */
     .cart-summary {
-      background-color: rgba(20, 20, 40, 0.8);
-      padding: 20px;
-      border-radius: 10px;
-      margin-top: 30px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 
+        0 10px 20px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.05);
     }
     
+    .cart-summary h4 {
+      color: #00bfff;
+      margin-bottom: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Checkout button styling */
     .btn-checkout {
       background: linear-gradient(to right, #00bfff, #00ffcc);
       color: #000;
-      font-weight: bold;
-      padding: 12px 30px;
+      font-weight: 600;
+      padding: 15px 30px;
       border: none;
-      border-radius: 30px;
+      border-radius: 8px;
       margin-top: 20px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-size: 16px;
     }
     
     .btn-checkout:hover {
@@ -216,20 +364,64 @@ $cartMessage = getCartMessage();
       color: #000;
     }
     
+    .btn-checkout:focus {
+      outline: none;
+      box-shadow: 0 0 0 0.2rem rgba(0, 191, 255, 0.25);
+    }
+    
+    /* Empty cart styling */
     .empty-cart {
       text-align: center;
       padding: 50px 0;
     }
     
+    .empty-cart i {
+      color: rgba(255, 255, 255, 0.2);
+      margin-bottom: 20px;
+    }
+    
+    .empty-cart h3 {
+      color: #00bfff;
+      margin-bottom: 15px;
+    }
+    
+    /* Continue shopping button styling */
     .continue-shopping {
       margin-top: 20px;
+    }
+    
+    .btn-outline-info {
+      border: 2px solid #00bfff;
+      color: #00bfff;
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-outline-info:hover {
+      background-color: #00bfff;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 191, 255, 0.3);
+    }
+    
+    .btn-outline-danger {
+      border: 2px solid #ff3860;
+      color: #ff3860;
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-outline-danger:hover {
+      background-color: #ff3860;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 56, 96, 0.3);
     }
   </style>
 </head>
 
 <body>
   <div class="container-fluid px-0">
-  <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark">
   <a class="navbar-brand" href="web1.php">GamingZone</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
@@ -243,23 +435,30 @@ $cartMessage = getCartMessage();
       <li class="nav-item"> <a class="nav-link" href="console.php">Gaming Consoles</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console_games.php">Console Games</a> </li>
     </ul>
-    <form class="form-inline">
-      <input class="search-bar" type="search" placeholder="Search" />
+
+    <!-- Search bar -->
+    <form class="form-inline my-2 my-lg-0">
+      <input class="search-bar mr-2" type="search" placeholder="Search" />
       <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
     </form>
 
     <!-- Cart Icon -->
     <a href="cart.php" class="ml-3 mr-3 position-relative">
       <span class="cart-icon">
-        <i class="fas fa-shopping-cart"></i>
-        <?php if(isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
-        <span class="cart-badge"><?php echo count($_SESSION['cart']); ?></span>
+        <i class="fas fa-shopping-cart" style="color: #00ffff; font-size: 24px;"></i>
+        <?php 
+        $cartCount = getCartItemCount();
+        if($cartCount > 0): 
+        ?>
+        <span style="position: absolute; top: -10px; right: -10px; background-color: #ff3860; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+          <?php echo $cartCount; ?>
+        </span>
         <?php endif; ?>
       </span>
     </a>
 
-    <!-- Dropdown Button -->
-    <div class="dropdown ml-2">
+    <!-- Modern Login Button -->
+    <div class="dropdown ml-3">
       <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-user account-btn-icon"></i>Account
       </button>
@@ -271,11 +470,22 @@ $cartMessage = getCartMessage();
   </div>
 </nav>
 
-    <div class="container my-5">
-      <h1><i class="fas fa-shopping-cart mr-3"></i>Your Shopping Cart</h1>
-      
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="container">
+        <div class="hero-content text-center">
+          <h1><i class="fas fa-shopping-cart mr-3"></i>Your Shopping Cart</h1>
+          <p class="lead mt-3" style="color: rgba(255, 255, 255, 0.8);">
+            Review your items and proceed to checkout
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container my-4">
       <?php if($cartMessage): ?>
-      <div class="alert alert-<?php echo $cartMessage['type']; ?> alert-dismissible fade show" role="alert">
+      <div class="alert alert-<?php echo $cartMessage['type']; ?> alert-dismissible fade show" role="alert" style="background: rgba(<?php echo $cartMessage['type'] == 'success' ? '0, 200, 81, 0.9' : '255, 56, 96, 0.9'; ?>); border: none; color: white; border-radius: 10px;">
+        <i class="fas fa-<?php echo $cartMessage['type'] == 'success' ? 'check-circle' : 'exclamation-circle'; ?> mr-2"></i>
         <?php echo $cartMessage['message']; ?>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -286,49 +496,52 @@ $cartMessage = getCartMessage();
       <div class="cart-container">
         <?php if(count($cartItems) > 0): ?>
           <form action="cart_action.php" method="post">
-            <table class="table cart-table">
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Image</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Subtotal</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php foreach($cartItems as $id => $item): ?>
-                <tr>
-                  <td><?php echo $item['name']; ?></td>
-                  <td><img src="<?php echo $item['image']; ?>" class="product-image" alt="<?php echo $item['name']; ?>"></td>
-                  <td>$<?php echo number_format($item['price'], 2); ?></td>
-                  <td>
-                    <input type="number" name="quantity[<?php echo $id; ?>]" value="<?php echo $item['quantity']; ?>" min="1" class="quantity-input">
-                  </td>
-                  <td>$<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
-                  <td>
-                    <button type="submit" name="update" value="<?php echo $id; ?>" class="btn btn-update btn-sm"><i class="fas fa-sync-alt"></i> Update</button>
-                    <button type="submit" name="remove" value="<?php echo $id; ?>" class="btn btn-remove btn-sm mt-2"><i class="fas fa-trash"></i> Remove</button>
-                  </td>
-                </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
+            <div class="table-responsive">
+              <table class="table cart-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Image</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach($cartItems as $id => $item): ?>
+                  <tr>
+                    <td class="font-weight-medium"><?php echo $item['name']; ?></td>
+                    <td><img src="<?php echo $item['image']; ?>" class="product-image" alt="<?php echo $item['name']; ?>"></td>
+                    <td>$<?php echo number_format($item['price'], 2); ?></td>
+                    <td>
+                      <input type="number" name="quantity[<?php echo $id; ?>]" value="<?php echo $item['quantity']; ?>" min="1" class="quantity-input">
+                    </td>
+                    <td class="font-weight-bold">$<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
+                    <td>
+                      <button type="submit" name="update" value="<?php echo $id; ?>" class="btn btn-update btn-sm mb-2"><i class="fas fa-sync-alt"></i> Update</button>
+                      <button type="submit" name="remove" value="<?php echo $id; ?>" class="btn btn-remove btn-sm"><i class="fas fa-trash"></i> Remove</button>
+                    </td>
+                  </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
             
-            <div class="row">
+            <div class="row mt-4">
               <div class="col-md-6">
                 <div class="continue-shopping">
-                  <a href="web1.php" class="btn btn-outline-info"><i class="fas fa-arrow-left mr-2"></i>Continue Shopping</a>
-                  <button type="submit" name="clear_cart" value="1" class="btn btn-outline-danger ml-2">
+                  <a href="web1.php" class="btn btn-outline-info mr-2"><i class="fas fa-arrow-left mr-2"></i>Continue Shopping</a>
+                  <button type="submit" name="clear_cart" value="1" class="btn btn-outline-danger">
                     <i class="fas fa-trash-alt mr-2"></i>Clear Cart
                   </button>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="cart-summary text-right">
-                  <h4>Cart Summary</h4>
-                  <hr class="bg-info">
+                  <h4><i class="fas fa-receipt mr-2"></i>Cart Summary</h4>
+                  <hr style="border-color: rgba(0, 191, 255, 0.3); margin: 15px 0;">
+                  
                   <div class="d-flex justify-content-between my-3">
                     <span>Subtotal:</span>
                     <span>$<?php echo number_format($cartTotal, 2); ?></span>
@@ -337,9 +550,10 @@ $cartMessage = getCartMessage();
                     <span>Shipping:</span>
                     <span>$<?php echo number_format($cartTotal > 0 ? 10.00 : 0, 2); ?></span>
                   </div>
+                  <hr style="border-color: rgba(255, 255, 255, 0.1); margin: 15px 0;">
                   <div class="d-flex justify-content-between mb-3">
-                    <span><strong>Total:</strong></span>
-                    <span><strong>$<?php echo number_format($cartTotal + ($cartTotal > 0 ? 10.00 : 0), 2); ?></strong></span>
+                    <span class="h5">Total:</span>
+                    <span class="h5">$<?php echo number_format($cartTotal + ($cartTotal > 0 ? 10.00 : 0), 2); ?></span>
                   </div>
                   <a href="checkout.php" class="btn btn-checkout btn-block"><i class="fas fa-credit-card mr-2"></i>Proceed to Checkout</a>
                 </div>
@@ -348,9 +562,9 @@ $cartMessage = getCartMessage();
           </form>
         <?php else: ?>
           <div class="empty-cart">
-            <i class="fas fa-shopping-cart fa-5x mb-4 text-muted"></i>
+            <i class="fas fa-shopping-cart fa-5x mb-4"></i>
             <h3>Your cart is empty</h3>
-            <p class="text-muted">Looks like you haven't added any products to your cart yet.</p>
+            <p style="color: rgba(255, 255, 255, 0.7);">Looks like you haven't added any products to your cart yet.</p>
             <a href="web1.php" class="btn btn-outline-info mt-4"><i class="fas fa-arrow-left mr-2"></i>Return to Shopping</a>
           </div>
         <?php endif; ?>
@@ -358,37 +572,37 @@ $cartMessage = getCartMessage();
     </div>
     
     <!-- Footer -->
-    <footer class="text-center py-4 text-white" style="background-color: rgba(10, 10, 30, 0.9);">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4">
-            <h5>Contact Us</h5>
-            <p><i class="fas fa-envelope mr-2"></i> info@gamingzone.com</p>
-            <p><i class="fas fa-phone mr-2"></i> (123) 456-7890</p>
-          </div>
-          <div class="col-md-4">
-            <h5>Quick Links</h5>
-            <ul class="list-unstyled">
-              <li><a href="#" class="text-info">About Us</a></li>
-              <li><a href="contact.php" class="text-info">Contact</a></li>
-              <li><a href="#" class="text-info">Terms of Service</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-            <h5>Follow Us</h5>
-            <a href="#" class="text-info mx-2"><i class="fab fa-facebook fa-lg"></i></a>
-            <a href="#" class="text-info mx-2"><i class="fab fa-twitter fa-lg"></i></a>
-            <a href="#" class="text-info mx-2"><i class="fab fa-instagram fa-lg"></i></a>
-          </div>
-        </div>
-        <hr class="bg-info">
-        <p class="mb-0">&copy; 2023 GamingZone. All rights reserved.</p>
+<footer class="text-center text-lg-start text-white mt-5" style="background-color: #111;">
+  <div class="container p-4">
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <h6 class="text-uppercase fw-bold">GamerZone</h6>
+        <p>Powering your play with the latest in gaming laptops, accessories, and VR tech.</p>
       </div>
-    </footer>
+      <div class="col-md-4 mb-4">
+        <h6 class="text-uppercase fw-bold">Quick Links</h6>
+        <ul class="list-unstyled">
+          <li><a href="web1.php" class="text-white">Home</a></li>
+          <li><a href="contact.php" class="text-white">Contact Us</a></li>
+          <li><a href="contact.php" class="text-white">Feedback</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h6 class="text-uppercase fw-bold">Contact</h6>
+        <p>Email: support@gamerzone.com</p>
+        <p>Phone: +94 71 123 4567</p>
+      </div>
+    </div>
   </div>
+  <div class="text-center p-3" style="background-color: rgba(255,255,255,0.05);">
+    © 2025 GamerZone. All rights reserved.
+  </div>
+</footer>
+</div> <!-- END container-fluid -->
 
-  <!-- jQuery and Bootstrap JS -->
-  <script src="js/jquery-3.3.1.min.js"></script>
-  <script src="js/bootstrap-4.3.1.js"></script>
+<!-- Scripts -->
+<script src="js/popper.min.js"></script>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/bootstrap-4.3.1.js"></script>
 </body>
 </html>

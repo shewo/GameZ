@@ -65,8 +65,8 @@ $result = $conn->query($sql);
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item"> <a class="nav-link" href="laptop.php">Laptops</a> </li>
-      <li class="nav-item"> <a class="nav-link" href="parts.php">Accessories</a> </li>
-      <li class="nav-item"> <a class="nav-link" href="accesories.php">Parts</a> </li>
+      <li class="nav-item"> <a class="nav-link" href="accesories.php">Accessories</a> </li>
+      <li class="nav-item"> <a class="nav-link" href="parts.php">Parts</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console.php">Gaming Consoles</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console_games.php">Console Games</a> </li>
     </ul>

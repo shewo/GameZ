@@ -120,18 +120,20 @@ h1 { color: #ffffff; text-align: center; margin: 50px 0 30px; text-shadow: 0 0 1
 <nav class="navbar navbar-expand-lg navbar-dark">
   <a class="navbar-brand" href="web1.php">GamingZone</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-    <span class="navbar-toggler-icon"></span>
+    <span class="navbar-toggler-icon"></span> 
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item"> <a class="nav-link" href="laptop.php">Laptops</a> </li>
-      <li class="nav-item"> <a class="nav-link active" href="parts.php">Accessories</a> </li>
-      <li class="nav-item"> <a class="nav-link" href="accesories.php">Parts</a> </li>
+      <li class="nav-item"> <a class="nav-link" href="accesories.php">Accessories</a> </li>
+      <li class="nav-item"> <a class="nav-link active" href="parts.php">Parts</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console.php">Gaming Consoles</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console_games.php">Console Games</a> </li>
     </ul>
-    <form class="form-inline">
-      <input class="search-bar" type="search" placeholder="Search" />
+
+    <!-- Search bar -->
+    <form class="form-inline my-2 my-lg-0">
+      <input class="search-bar mr-2" type="search" placeholder="Search" />
       <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
     </form>
 

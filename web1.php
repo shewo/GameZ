@@ -176,8 +176,10 @@ initCartSession();
       <li class="nav-item"> <a class="nav-link" href="console.php">Gaming Consoles</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console_games.php">Console Games</a> </li>
     </ul>
-    <form class="form-inline">
-      <input class="search-bar" type="search" placeholder="Search" />
+
+    <!-- Search bar -->
+    <form class="form-inline my-2 my-lg-0">
+      <input class="search-bar mr-2" type="search" placeholder="Search" />
       <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
     </form>
 
@@ -196,16 +198,16 @@ initCartSession();
       </span>
     </a>
 
-<!-- Modern Login Button -->
-<div class="dropdown ml-2">
-  <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <i class="fas fa-user account-btn-icon"></i>Account
-  </button>
-  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
-    <a class="dropdown-item" href="signup.php"><i class="fas fa-user-plus mr-2"></i>Sign Up</a>
-    <a class="dropdown-item" href="login.php"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
-  </div>
-</div>
+    <!-- Modern Login Button -->
+    <div class="dropdown ml-3">
+      <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-user account-btn-icon"></i>Account
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
+        <a class="dropdown-item" href="signup.php"><i class="fas fa-user-plus mr-2"></i>Sign Up</a>
+        <a class="dropdown-item" href="login.php"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
+      </div>
+    </div>
 
 
 
