@@ -2,6 +2,14 @@
 // login.php
 session_start();
 
+// Include cart functions
+require_once 'cart_functions.php';
+
+// Initialize cart session if needed
+if(function_exists('initCartSession')) {
+    initCartSession();
+}
+
 // Check login submission
 if(isset($_POST['login-submit'])){
     $username = $_POST['mail'];
@@ -34,6 +42,8 @@ if(isset($_POST['login-submit'])){
   <title>Login - GamerZone</title>
 
   <link href="css/bootstrap-4.3.1.css" rel="stylesheet" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
   <style>
     body {
@@ -71,12 +81,34 @@ if(isset($_POST['login-submit'])){
       border-radius: 8px;
     }
    .account-btn {
-  border: none;
-  background: none;        /* remove background color */
-  padding: 0;              /* remove padding */
-  width: auto;             /* adjust to image width */
-  height: auto;            /* adjust to image height */
-}
+      background: transparent;
+      border: 2px solid #17a2b8;
+      border-radius: 25px;
+      padding: 8px 16px;
+      color: #17a2b8;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+    .account-btn:hover {
+      background-color: #17a2b8;
+      border-color: #17a2b8;
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+    }
+    .account-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.25);
+      background-color: #17a2b8;
+      border-color: #17a2b8;
+      color: #fff;
+    }
+    .account-btn-icon {
+      margin-right: 6px;
+      font-size: 1em;
+    }
 
 .account-img {
   width: 50px;             /* image width */
@@ -133,33 +165,53 @@ if(isset($_POST['login-submit'])){
 
 <body>
 <div class="container-fluid px-0">
-<!-- Updated Navbar Section in parts.php -->
 <nav class="navbar navbar-expand-lg navbar-dark">
   <a class="navbar-brand" href="web1.php">GamingZone</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-    <span class="navbar-toggler-icon"></span>
+    <span class="navbar-toggler-icon"></span> 
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item"> <a class="nav-link" href="laptop.php">Laptops</a> </li>
-      <li class="nav-item"> <a class="nav-link active" href="parts.php">Accessories</a> </li>
-      <li class="nav-item"> <a class="nav-link" href="accesories.php">Parts</a> </li>
+      <li class="nav-item"> <a class="nav-link" href="accesories.php">Accessories</a> </li>
+      <li class="nav-item"> <a class="nav-link" href="parts.php">Parts</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console.php">Gaming Consoles</a> </li>
       <li class="nav-item"> <a class="nav-link" href="console_games.php">Console Games</a> </li>
     </ul>
-    <form class="form-inline">
-      <input class="search-bar" type="search" placeholder="Search" />
+
+    <!-- Search bar -->
+    <form class="form-inline my-2 my-lg-0">
+      <input class="search-bar mr-2" type="search" placeholder="Search" />
       <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
     </form>
 
-    <!-- Dropdown Button (copied from web1.php) -->
+    <!-- Cart Icon -->
+    <a href="cart.php" class="ml-3 mr-3 position-relative">
+      <span class="cart-icon">
+        <i class="fas fa-shopping-cart" style="color: #00ffff; font-size: 24px;"></i>
+        <?php 
+        if(function_exists('getCartItemCount')):
+          $cartCount = getCartItemCount();
+          if($cartCount > 0): 
+        ?>
+        <span style="position: absolute; top: -10px; right: -10px; background-color: #ff3860; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+          <?php echo $cartCount; ?>
+        </span>
+        <?php 
+          endif;
+        endif; 
+        ?>
+      </span>
+    </a>
+
+    <!-- Modern Login Button -->
     <div class="dropdown ml-3">
       <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <img src="images/login.png" alt="User" class="account-img">
+        <i class="fas fa-user account-btn-icon"></i>Account
       </button>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
-        <a class="dropdown-item" href="signup.php">Sign Up</a>
-        <a class="dropdown-item" href="login.php">Login</a>
+        <a class="dropdown-item" href="signup.php"><i class="fas fa-user-plus mr-2"></i>Sign Up</a>
+        <a class="dropdown-item" href="login.php"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
       </div>
     </div>
 
