@@ -278,42 +278,6 @@ $cartMessage = getCartMessage();
 <div class="row">
 <?php
 // Static products
-$products = [
-  ["name"=>"Assassin's Creed Shadows Video game","price"=>"17250","image"=>"images/ac_shados.png"],
-  ["name"=>"Avatar: Frontiers of Pandora Video game","price"=>"15000","image"=>"images/KENA.PNG"],
-  ["name"=>"Star Wars Outlaws","price"=>"10000","image"=>"images/starwars1.png"],
-  ["name"=>"Far Cry 6 Video game","price"=>"7500","image"=>"images/farcry6.png"],
-  ["name"=>"f1.25","price"=>"17250","image"=>"images/f1.png"],
-  ["name"=>"Kena: Bridge of Spirits","price"=>"4700","image"=>"images/kena21.PNG"],
-  ["name"=>"Need for Speed Unbound Video game","price"=>"7200","image"=>"images/nfs_unbound1.png"],
-  ["name"=>"Alan Wake 2 Survival game","price"=>"10000","image"=>"images/alanwake2.png"],
-  ["name"=>"Jurassic World Evolution 3","price"=>"5400","image"=>"images/jurassicworld2.png"],
-  ["name"=>"Black Myth: Wukong Video game","price"=>"12300","image"=>"images/black_myth.png"],
-  ["name"=>"Horizon Zero Dawn Video game","price"=>"4500","image"=>"images/horizen_zerodown.png"],
-  ["name"=>"Call of Duty: Black Ops 6 Video game","price"=>"4500","image"=>"images/cod1.png"]
-];
-
-// Display static products
-foreach ($products as $product) {
-    echo '
-    <div class="col-xl-3 mb-4">
-      <div class="card col-md-4 col-xl-12">
-        <img class="card-img-top" src="'.$product["image"].'" alt="'.$product["name"].'">
-        <div class="card-body">
-          <h5 class="card-title">'.$product["name"].'</h5>
-          <h5 class="card-title">'.number_format($product["price"]).' LKR</h5>
-          <form action="cart_action.php" method="post">
-            <input type="hidden" name="product_id" value="console_game_'.md5($product["name"]).'">
-            <input type="hidden" name="product_name" value="'.$product["name"].'">
-            <input type="hidden" name="product_price" value="'.$product["price"].'">
-            <input type="hidden" name="product_image" value="'.$product["image"].'">
-            <input type="hidden" name="quantity" value="1">
-            <button type="submit" name="add_to_cart" class="btn btn-primary btn-block"><i class="fas fa-shopping-cart mr-2"></i> Add to Cart</button>
-          </form>
-        </div>
-      </div>
-    </div>';
-}
 
 // Connect to DB and display admin-added console games
 $conn = new mysqli("localhost","root","","gamezone");
