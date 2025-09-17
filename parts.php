@@ -1,3 +1,4 @@
+
 <?php
 // parts.php
 
@@ -167,7 +168,7 @@ h1 { color: #ffffff; text-align: center; margin: 50px 0 30px; text-shadow: 0 0 1
       </ol>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img class="d-block w-100 rounded" src="images/strix1_mevs.jpg" alt="Slide 1" height="650" />
+          <img class="d-block w-100 rounded" src="images/accesoriesimg1 (1).jpeg" alt="Slide 1" height="650" />
           <div class="carousel-caption d-none d-md-block">
             <h5>Design Meets Power</h5>
             <p>Ignite your gameplay with firepower that melts the competition.</p>

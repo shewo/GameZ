@@ -8,7 +8,7 @@ if (!isset($_SESSION['cart'])) {
 }
 
 // Add product to cart
-if (isset($_POST['add_to_cart'])) {
+if (isset($_POST['add_to_cart']) || (isset($_POST['action']) && $_POST['action'] === 'add')) {
     $product_id = isset($_POST['product_id']) ? $_POST['product_id'] : '';
     $product_name = isset($_POST['product_name']) ? $_POST['product_name'] : '';
     $product_price = isset($_POST['product_price']) ? (float)$_POST['product_price'] : 0;

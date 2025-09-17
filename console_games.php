@@ -41,6 +41,14 @@ $cartMessage = getCartMessage();
     .navbar .nav-link:hover {
       color: #00ffcc !important;
     }
+    .cart-icon {
+      position: relative;
+      display: inline-block;
+    }
+    .cart-icon i {
+      color: #00ffff !important;
+      font-size: 24px !important;
+    }
     .account-btn {
       background: transparent;
       border: 2px solid #17a2b8;
@@ -48,6 +56,21 @@ $cartMessage = getCartMessage();
       padding: 8px 16px;
       color: #17a2b8;
       font-weight: 500;
+    }
+    .cart-count {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background-color: #ff3860;
+      color: white;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-transform: uppercase;
       letter-spacing: 1px;
       transition: all 0.3s ease;
@@ -173,7 +196,7 @@ $cartMessage = getCartMessage();
         $cartCount = getCartItemCount();
         if($cartCount > 0): 
         ?>
-        <span style="position: absolute; top: -10px; right: -10px; background-color: #ff3860; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+        <span class="cart-count">
           <?php echo $cartCount; ?>
         </span>
         <?php endif; ?>
@@ -197,8 +220,8 @@ $cartMessage = getCartMessage();
 <!-- Cart Message Section -->
 <div class="container mt-3">
   <?php if ($cartMessage): ?>
-    <div class="alert <?php echo strpos($cartMessage, 'Added') !== false ? 'alert-success' : 'alert-info'; ?> alert-dismissible fade show" role="alert">
-      <?php echo $cartMessage; ?>
+    <div class="alert alert-<?php echo $cartMessage['type']; ?> alert-dismissible fade show" role="alert">
+      <?php echo $cartMessage['message']; ?>
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -284,10 +307,8 @@ foreach ($products as $product) {
             <input type="hidden" name="product_name" value="'.$product["name"].'">
             <input type="hidden" name="product_price" value="'.$product["price"].'">
             <input type="hidden" name="product_image" value="'.$product["image"].'">
-            <input type="hidden" name="action" value="add">
-            <button type="submit" class="btn btn-primary">
-              <i class="fas fa-cart-plus"></i> Add to Cart
-            </button>
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" name="add_to_cart" class="btn btn-primary btn-block"><i class="fas fa-shopping-cart mr-2"></i> Add to Cart</button>
           </form>
         </div>
       </div>
@@ -312,14 +333,12 @@ if($result && $result->num_rows > 0){
               <h5 class="card-title">'.number_format($row["price"]).' LKR</h5>
               <p class="card-text">'.$row["specs"].'</p>
               <form action="cart_action.php" method="post">
-                <input type="hidden" name="product_id" value="db_console_game_'.$row["id"].'">
+                <input type="hidden" name="product_id" value="console_game_'.$row["id"].'">
                 <input type="hidden" name="product_name" value="'.$row["name"].'">
                 <input type="hidden" name="product_price" value="'.$row["price"].'">
                 <input type="hidden" name="product_image" value="uploads/'.$row["image"].'">
-                <input type="hidden" name="action" value="add">
-                <button type="submit" class="btn btn-primary">
-                  <i class="fas fa-cart-plus"></i> Add to Cart
-                </button>
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" name="add_to_cart" class="btn btn-primary btn-block"><i class="fas fa-shopping-cart mr-2"></i> Add to Cart</button>
               </form>
             </div>
           </div>

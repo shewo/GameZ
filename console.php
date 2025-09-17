@@ -10,54 +10,7 @@ $cartMessage = getCartMessage();
 
 // Define static products
 $products = [
-    [
-        'name' => 'PlayStation 5 (PS5)',
-        'price' => '189000',
-        'image' => 'images/pngtree-top-quality-playstation-5-console-isolated-png-image_15514648-removebg-preview-removebg-preview.png',
-        'description' => 'Play PS5 games with the most impressive visuals ever possible on a PlayStation console. Experience advanced ray tracing, super sharp image clarity on your 4K TV and higher frame rates in PS5 enhanced games. Fast 825GB SSD storage.'
-    ],
-    [
-        'name' => 'PlayStation 5 Pro (PS5 Pro)',
-        'price' => '269000',
-        'image' => 'images/pngtree-top-quality-playstation-5-console-isolated-png-image_15514648-removebg-preview.png',
-        'description' => 'Play PS5 games with the most impressive visuals ever possible on a PlayStation console. Experience advanced ray tracing, super sharp image clarity on your 4K TV and higher frame rates in PS5 Pro enhanced games. Enhanced GPU performance and 2TB storage.'
-    ],
-    [
-        'name' => 'PlayStation 4 (PS4)',
-        'price' => '89000',
-        'image' => 'images/ps4.png',
-        'description' => 'Store your games, apps, screenshots and videos with up to 1TB storage inside the PS4 console – slimmer and lighter than the original PS4 model and available in Jet WHITE and more colours. Great value gaming console.'
-    ],
-    [
-        'name' => 'Xbox Series X',
-        'price' => '199000',
-        'image' => 'images/images__1_-removebg-preview.png',
-        'description' => 'Experience next-gen gaming with the fastest, most powerful Xbox ever. Featuring 4K gaming, lightning-fast load times, 1TB SSD storage, and backward compatibility across thousands of titles. Jump into immersive worlds with stunning graphics and seamless performance.'
-    ],
-    [
-        'name' => 'Xbox Series S',
-        'price' => '129000',
-        'image' => 'images/xbox serise s.png',
-        'description' => 'Play next-gen games in a sleek, all-digital console. With lightning-fast load times, stunning 1440p resolution up to 120 FPS, and a 512GB SSD, the Xbox Series S is the best value in gaming. Compact, powerful, and Game Pass ready!'
-    ],
-    [
-        'name' => 'Meta Quest 3',
-        'price' => '159000',
-        'image' => 'images/Meta-Quest-3-PNG-removebg-preview.png',
-        'description' => 'Step into the future with the Meta Quest 3 — the most powerful standalone VR headset yet. Featuring stunning 4K+ visuals, full-color mixed reality, advanced hand tracking, and a lightning-fast Snapdragon XR2 Gen 2 chip. Play wirelessly or connect to your PC for high-end VR experiences.'
-    ],
-    [
-        'name' => 'PICO 4 VR Headset',
-        'price' => '119000',
-        'image' => 'images/vr2.png',
-        'description' => 'Discover next-gen VR with the ultra-lightweight PICO 4 headset. Enjoy crisp 4K+ visuals, wide 105° field of view, and smooth 90Hz refresh rate — all without needing a PC. Whether you\'re gaming, working out, or watching VR content, the PICO 4 delivers immersive experiences with comfort and style.'
-    ],
-    [
-        'name' => 'Valve Index VR (Full Kit)',
-        'price' => '349000',
-        'image' => 'images/vr4.png',
-        'description' => 'Unlock premium virtual reality with the Valve Index Full Kit. Designed for serious gamers, it offers ultra-smooth 144Hz refresh rate, crystal-clear visuals, and industry-leading finger-tracking controllers. With precise base station tracking and wide field of view. Perfect for VRChat, sim racing, and high-end PC gaming.'
-    ]
+   
 ];
 ?>
 
