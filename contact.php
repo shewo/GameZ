@@ -1,0 +1,901 @@
+
+<?php
+// Include cart functions
+require_once 'cart_functions.php';
+
+// Initialize cart session
+initCartSession();
+
+// Initialize variables for form data and messages
+$successMessage = "";
+$errorMessage = "";
+$formSubmitted = false;
+
+// Process form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $formSubmitted = true;
+    
+    // Collect form data
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $firstName = filter_input(INPUT_POST, 'firstName', FILTER_SANITIZE_STRING);
+    $lastName = filter_input(INPUT_POST, 'lastName', FILTER_SANITIZE_STRING);
+    $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
+    $country = filter_input(INPUT_POST, 'country', FILTER_SANITIZE_STRING);
+    $interest = filter_input(INPUT_POST, 'interest', FILTER_SANITIZE_STRING);
+    $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
+    
+    // Basic validation
+    if (empty($email) || empty($firstName) || empty($lastName) || empty($phone) || empty($country) || empty($interest)) {
+        $errorMessage = "Please fill in all required fields.";
+    } else {
+        // Email recipient
+        $to = "support@gamerzone.com";
+        
+        // Email subject
+        $subject = "New Contact Form Submission: $interest";
+        
+        // Email headers
+        $headers = "From: $email" . "\r\n";
+        $headers .= "Reply-To: $email" . "\r\n";
+        $headers .= "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8" . "\r\n";
+        
+        // Email body
+        $emailBody = "
+            <html>
+            <head>
+                <title>New Contact Form Submission</title>
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; }
+                    .container { width: 100%; max-width: 600px; margin: 0 auto; }
+                    .header { background-color: #0099cc; color: #ffffff; padding: 10px 20px; }
+                    .content { padding: 20px; border: 1px solid #dddddd; }
+                    .footer { font-size: 12px; color: #777777; margin-top: 20px; }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <div class='header'>
+                        <h2>New Contact Form Submission</h2>
+                    </div>
+                    <div class='content'>
+                        <p><strong>Name:</strong> $firstName $lastName</p>
+                        <p><strong>Email:</strong> $email</p>
+                        <p><strong>Phone:</strong> $phone</p>
+                        <p><strong>Country:</strong> $country</p>
+                        <p><strong>Interest:</strong> $interest</p>
+                        <p><strong>Message:</strong><br>$message</p>
+                        <p><strong>Submission Time:</strong> " . date('Y-m-d H:i:s') . "</p>
+                    </div>
+                    <div class='footer'>
+                        <p>This email was sent from the GamingZone website contact form.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        ";
+        
+        // Send email
+        if(mail($to, $subject, $emailBody, $headers)) {
+            $successMessage = "Thank you! Your message has been sent successfully. We'll contact you soon.";
+            
+            // Clear form data after successful submission
+            $email = $firstName = $lastName = $phone = $country = $interest = $message = "";
+        } else {
+            $errorMessage = "Failed to send message. Please try again or contact us directly.";
+        }
+    }
+}
+
+// Function to retain form values after failed submission
+function getValue($fieldName) {
+    global $formSubmitted, $errorMessage;
+    if ($formSubmitted && !empty($errorMessage) && isset($_POST[$fieldName])) {
+        return htmlspecialchars($_POST[$fieldName]);
+    }
+    return '';
+}
+
+// Function to check if option was selected
+function isSelected($fieldName, $value) {
+    global $formSubmitted, $errorMessage;
+    if ($formSubmitted && !empty($errorMessage) && isset($_POST[$fieldName]) && $_POST[$fieldName] == $value) {
+        return 'selected';
+    }
+    return '';
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - GamingZone</title>
+    <!-- Bootstrap 4 CSS -->
+    <link href="css/bootstrap-4.3.1.css" rel="stylesheet" />
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body {
+            background-image: url('images/background1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        
+        /* Overlay to ensure text readability */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        /* Navbar styles matching your product pages */
+        .navbar {
+            background-color: rgba(10, 10, 30, 0.9);
+        }
+
+        .navbar .navbar-brand,
+        .navbar-nav .nav-link {
+            color: #ffffff !important;
+        }
+
+        .navbar .nav-link:hover {
+            color: #00ffcc !important;
+        }
+
+        .search-bar {
+            background-color: #222;     
+            color: white;               
+            border: 1px solid #444;     
+            padding: 8px 12px;          
+            border-radius: 8px;         
+        }
+        
+        .account-btn {
+            background: transparent;
+            border: 2px solid #17a2b8;
+            border-radius: 25px;
+            padding: 8px 16px;
+            color: #17a2b8;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .account-btn:hover {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+        }
+        
+        .account-btn-icon {
+            margin-right: 6px;
+            font-size: 1em;
+        }
+        
+        /* Dropdown menu dark theme */
+        .dropdown-menu {
+            background-color: rgba(10, 10, 30, 0.95);
+            border: none;
+            min-width: 150px;
+        }
+        
+        /* Dropdown links */
+        .dropdown-item {
+            color: #00ffff;
+            background-color: transparent;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        /* Hover effect for dropdown links */
+        .dropdown-item:hover {
+            background-color: #00bfff;
+            color: #ffffff;
+        }
+        
+        /* Optional: remove arrow on toggle to match image style */
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        h1 {
+            color: #ffffff;
+            text-align: center;
+            margin: 50px 0 30px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        
+        .hero-section {
+            padding: 80px 0 40px 0;
+            position: relative;
+            color: white;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Fixed Tab Styles for Bootstrap 4 */
+        .nav-tabs {
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            margin-bottom: 0;
+            background: rgba(0,0,0,0.6);
+            border-radius: 10px 10px 0 0;
+            padding: 10px 10px 0 10px;
+        }
+        
+        .nav-tabs .nav-item {
+            margin-bottom: -1px;
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+            padding: 15px 25px;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.1);
+            border: none;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: #00bfff !important;
+            background: rgba(0,191,255,0.1);
+            border: none;
+            border-bottom: 3px solid #00bfff;
+        }
+        
+        .contact-form {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 0 0 15px 15px;
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            padding: 40px;
+            position: relative;
+            z-index: 3;
+            backdrop-filter: blur(15px);
+        }
+        
+        .tab-content {
+            color: #ffffff;
+            padding: 20px 0;
+        }
+        
+        .form-control {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            color: #ffffff;
+            min-height: 48px;
+        }
+        
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .form-control:focus {
+            background: rgba(255,255,255,0.15);
+            border-color: #00bfff;
+            box-shadow: 0 0 0 0.2rem rgba(0,191,255,0.25);
+            color: #ffffff;
+        }
+
+        /* Improved select dropdown styling */
+        .custom-select {
+            background: rgba(255,255,255,0.1) !important;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: #ffffff !important;
+            padding: 12px 40px 12px 15px;
+            margin-bottom: 15px;
+            min-height: 48px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+
+        .custom-select:focus {
+            background: rgba(255,255,255,0.15) !important;
+            border-color: #00bfff;
+            box-shadow: 0 0 0 0.2rem rgba(0,191,255,0.25);
+            color: #ffffff !important;
+            outline: none;
+        }
+
+        .custom-select option {
+            background: #2a2a2a !important;
+            color: #ffffff !important;
+            padding: 8px;
+            border: none;
+        }
+
+        .custom-select option:hover,
+        .custom-select option:focus,
+        .custom-select option:checked {
+            background: #00bfff !important;
+            color: #ffffff !important;
+        }
+
+        /* Additional fallback for browser compatibility */
+        select.form-control {
+            background: rgba(255,255,255,0.1) !important;
+            border: 2px solid rgba(255,255,255,0.2);
+            color: #ffffff !important;
+            padding: 12px 40px 12px 15px;
+            min-height: 48px;
+            font-size: 16px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+
+        select.form-control:focus {
+            background: rgba(255,255,255,0.15) !important;
+            border-color: #00bfff;
+            box-shadow: 0 0 0 0.2rem rgba(0,191,255,0.25);
+            color: #ffffff !important;
+        }
+
+        select.form-control option {
+            background: #2a2a2a !important;
+            color: #ffffff !important;
+            padding: 8px;
+        }
+        
+        .form-label {
+            color: #ffffff;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .btn-contact {
+            background: linear-gradient(45deg, #00bfff, #0099cc);
+            border: none;
+            border-radius: 25px;
+            padding: 15px 40px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            width: 100%;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+            font-size: 16px;
+        }
+        
+        .btn-contact:hover {
+            background: linear-gradient(45deg, #0080ff, #007aa3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,191,255,0.4);
+            color: #ffffff;
+        }
+        
+        .btn-contact:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .info-section {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 60px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .info-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 
+                0 5px 15px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 10px 25px rgba(0,0,0,0.4),
+                0 0 20px rgba(0,191,255,0.2);
+            border-color: rgba(0,191,255,0.3);
+        }
+        
+        .info-icon {
+            font-size: 3rem;
+            color: #00bfff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0,191,255,0.5);
+        }
+        
+        .required {
+            color: #ff6b6b;
+        }
+        
+        .privacy-notice {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+            margin-top: 15px;
+        }
+        
+        .award-badges {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .badge-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            max-width: 120px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .form-check-input:checked {
+            background-color: #00bfff;
+            border-color: #00bfff;
+        }
+        
+        .form-check-input:focus {
+            border-color: #00bfff;
+            box-shadow: 0 0 0 0.25rem rgba(0,191,255,0.25);
+        }
+        
+        .text-cosmic {
+            background: linear-gradient(45deg, #00bfff, #0099cc, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0,191,255,0.5);
+        }
+        
+        /* Text shadow for better readability */
+        h1, h2, h3, h4, h5, h6, p, li {
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+        
+        .lead {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+        }
+        
+        /* Success/Error Messages */
+        .alert {
+            margin-top: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .alert-success {
+            background: rgba(40, 167, 69, 0.8);
+            border: 1px solid rgba(40, 167, 69, 0.5);
+            color: #ffffff;
+        }
+        
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.8);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ffffff;
+        }
+
+        /* Fix for mobile responsiveness */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 60px 0 30px 0;
+            }
+            
+            .contact-form {
+                padding: 30px 20px;
+            }
+            
+            .nav-tabs .nav-link {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="web1.php">GamingZone</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span> 
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"> <a class="nav-link" href="laptop.php">Laptops</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="accesories.php">Accessories</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="parts.php">Parts</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="console.php">Gaming Consoles</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="console_games.php">Console Games</a> </li>
+        </ul>
+
+        <!-- Search bar -->
+        <form class="form-inline my-2 my-lg-0">
+          <input class="search-bar mr-2" type="search" placeholder="Search" />
+          <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+        <!-- Cart Icon -->
+        <a href="cart.php" class="ml-3 mr-3 position-relative">
+          <span class="cart-icon">
+            <i class="fas fa-shopping-cart" style="color: #00ffff; font-size: 24px;"></i>
+            <?php 
+            $cartCount = getCartItemCount();
+            if($cartCount > 0): 
+            ?>
+            <span style="position: absolute; top: -10px; right: -10px; background-color: #ff3860; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+              <?php echo $cartCount; ?>
+            </span>
+            <?php endif; ?>
+          </span>
+        </a>
+
+        <!-- Modern Login Button -->
+        <div class="dropdown ml-3">
+          <button class="btn account-btn dropdown-toggle" type="button" id="authDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user account-btn-icon"></i>Account
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
+            <a class="dropdown-item" href="signup.php"><i class="fas fa-user-plus mr-2"></i>Sign Up</a>
+            <a class="dropdown-item" href="login.php"><i class="fas fa-sign-in-alt mr-2"></i>Login</a>
+          </div>
+        </div>
+      </div>
+    </nav><br>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content">
+                    <h1 class="display-4 font-weight-bold mb-4">
+                        <span class="text-cosmic">Contact Us</span>
+                    </h1>
+                    <p class="lead">Connect with our gaming equipment experts. We're here to provide stellar solutions for your gaming needs.</p>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <i class="fas fa-satellite-dish" style="font-size: 8rem; opacity: 0.7; color: #00bfff; text-shadow: 0 0 20px #00bfff;"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="contact-form">
+                        <!-- Tabs -->
+                        <ul class="nav nav-tabs" id="contactTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="contact-tab" data-toggle="tab" href="#contact" role="tab">
+                                    <i class="fas fa-rocket mr-2"></i>Contact us
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="locations-tab" data-toggle="tab" href="#locations" role="tab">
+                                    <i class="fas fa-globe mr-2"></i>Our Locations
+                                </a>
+                            </li>
+                        </ul>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="contactTabContent">
+                            <!-- Contact Form Tab -->
+                            <div class="tab-pane fade show active" id="contact" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p class="mb-4">The fastest way to connect with our gaming equipment specialists is through our contact form. Your message will be routed to the right team, and we'll respond at light speed.</p>
+                                        
+                                        <p class="mb-4">For an even more targeted response, please select your inquiry type below.</p>
+                                        
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><i class="fas fa-check text-info mr-2"></i> Looking for gaming laptops and need guidance?</li>
+                                            <li class="mb-2"><i class="fas fa-check text-info mr-2"></i> Want to see our latest gaming accessories?</li>
+                                            <li class="mb-2"><i class="fas fa-check text-info mr-2"></i> Have questions about our gaming equipment or services?</li>
+                                        </ul>
+                                        
+                                        <p>Share your gaming needs and goals - we'll help you level up!</p>
+
+                                        <!-- Award Badges -->
+                                        <div class="award-badges">
+                                            <div class="badge-item">
+                                                <div class="badge bg-gradient text-white rounded-pill px-2 py-1" style="background: linear-gradient(45deg, #ff6b6b, #ee5a52); font-size: 12px;">
+                                                    <strong>Leader</strong><br>
+                                                    <small>Gaming Gear<br>2024</small>
+                                                </div>
+                                            </div>
+                                            <div class="badge-item">
+                                                <div class="badge text-dark rounded-circle p-2" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: linear-gradient(45deg, #ffd700, #ffed4e); font-size: 10px;">
+                                                    <small><strong>Gamer<br>Choice<br>2024</strong></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-6">
+                                        <!-- Display success/error messages -->
+                                        <?php if (!empty($successMessage)): ?>
+                                            <div class="alert alert-success">
+                                                <i class="fas fa-check-circle mr-2"></i> <?php echo $successMessage; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if (!empty($errorMessage)): ?>
+                                            <div class="alert alert-danger">
+                                                <i class="fas fa-exclamation-triangle mr-2"></i> <?php echo $errorMessage; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <form id="contactForm" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                                            <div class="form-group">
+                                                <label class="form-label"><span class="required">*</span>Email</label>
+                                                <input type="email" name="email" class="form-control" placeholder="your.email@gmail.com" required value="<?php echo getValue('email'); ?>">
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="form-label"><span class="required">*</span>First Name</label>
+                                                        <input type="text" name="firstName" class="form-control" placeholder="John" required value="<?php echo getValue('firstName'); ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="form-label"><span class="required">*</span>Last Name</label>
+                                                        <input type="text" name="lastName" class="form-control" placeholder="Doe" required value="<?php echo getValue('lastName'); ?>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label"><span class="required">*</span>Phone Number</label>
+                                                <input type="tel" name="phone" class="form-control" placeholder="+94 71 123 4567" required value="<?php echo getValue('phone'); ?>">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label"><span class="required">*</span>Country</label>
+                                                <select name="country" class="custom-select form-control" required>
+                                                    <option value="">Select your country</option>
+                                                    <option value="lk" <?php echo isSelected('country', 'lk'); ?>>Sri Lanka</option>
+                                                    <option value="in" <?php echo isSelected('country', 'in'); ?>>India</option>
+                                                    <option value="us" <?php echo isSelected('country', 'us'); ?>>United States</option>
+                                                    <option value="uk" <?php echo isSelected('country', 'uk'); ?>>United Kingdom</option>
+                                                    <option value="ca" <?php echo isSelected('country', 'ca'); ?>>Canada</option>
+                                                    <option value="au" <?php echo isSelected('country', 'au'); ?>>Australia</option>
+                                                    <option value="de" <?php echo isSelected('country', 'de'); ?>>Germany</option>
+                                                    <option value="fr" <?php echo isSelected('country', 'fr'); ?>>France</option>
+                                                    <option value="jp" <?php echo isSelected('country', 'jp'); ?>>Japan</option>
+                                                    <option value="sg" <?php echo isSelected('country', 'sg'); ?>>Singapore</option>
+                                                    <option value="my" <?php echo isSelected('country', 'my'); ?>>Malaysia</option>
+                                                    <option value="th" <?php echo isSelected('country', 'th'); ?>>Thailand</option>
+                                                    <option value="other" <?php echo isSelected('country', 'other'); ?>>Other</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label"><span class="required">*</span>I am interested in...</label>
+                                                <select name="interest" class="custom-select form-control" required>
+                                                    <option value="">Please select</option>
+                                                    <option value="gaming-laptops" <?php echo isSelected('interest', 'gaming-laptops'); ?>>Gaming Laptops</option>
+                                                    <option value="accessories" <?php echo isSelected('interest', 'accessories'); ?>>Gaming Accessories (Keyboards, Mice, Headsets)</option>
+                                                    <option value="consoles" <?php echo isSelected('interest', 'consoles'); ?>>Gaming Consoles (PS5, Xbox, VR)</option>
+                                                    <option value="custom-build" <?php echo isSelected('interest', 'custom-build'); ?>>Custom PC Build</option>
+                                                    <option value="support" <?php echo isSelected('interest', 'support'); ?>>Technical Support</option>
+                                                    <option value="warranty" <?php echo isSelected('interest', 'warranty'); ?>>Warranty & Service</option>
+                                                    <option value="bulk-order" <?php echo isSelected('interest', 'bulk-order'); ?>>Bulk/Corporate Orders</option>
+                                                    <option value="price-inquiry" <?php echo isSelected('interest', 'price-inquiry'); ?>>Price Inquiry</option>
+                                                    <option value="partnership" <?php echo isSelected('interest', 'partnership'); ?>>Business Partnership</option>
+                                                    <option value="other" <?php echo isSelected('interest', 'other'); ?>>Other</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="form-label">Message</label>
+                                                <textarea name="message" class="form-control" rows="4" placeholder="Tell us about your gaming needs, budget, or any specific questions you have..."><?php echo getValue('message'); ?></textarea>
+                                            </div>
+                                            
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" name="privacy" id="privacyCheck" required>
+                                                <label class="form-check-label privacy-notice" for="privacyCheck">
+                                                    <span class="required">*</span>I agree to receive information about products, services and events from GamingZone.
+                                                </label>
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-contact" id="submitBtn">
+                                                <i class="fas fa-paper-plane mr-2"></i>Send Message
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Locations Tab -->
+                            <div class="tab-pane fade" id="locations" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="info-card">
+                                            <i class="fas fa-building info-icon"></i>
+                                            <h5>NSBM University Town</h5>
+                                            <p>Colombo 03<br>Sri Lanka</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="info-card">
+                                            <i class="fas fa-headset info-icon"></i>
+                                            <h5>Customer Support</h5>
+                                            <p>+94 71 123 4567<br>Mon-Sat: 9AM-10PM<br></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="info-card">
+                                            <i class="fas fa-envelope info-icon"></i>
+                                            <h5>Email Us</h5>
+                                            <p>support@gamerzone.com<br>sales@gamerzone.com<br>Response within 24 hours</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info-section">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="mb-4">
+                        <span class="text-cosmic">Why Choose GamingZone?</span>
+                    </h2>
+                    <p class="lead text-light">We provide gaming solutions that level up your experience</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="info-card">
+                        <i class="fas fa-laptop info-icon"></i>
+                        <h5>Premium Gaming Laptops</h5>
+                        <p>Latest gaming laptops from MSI, ASUS, HP, Lenovo and more top brands.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="info-card">
+                        <i class="fas fa-gamepad info-icon"></i>
+                        <h5>Gaming Accessories</h5>
+                        <p>High-quality keyboards, mice, headsets and more gaming peripherals.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="info-card">
+                        <i class="fas fa-tools info-icon"></i>
+                        <h5>Expert Support</h5>
+                        <p>Professional setup, configuration and ongoing technical support.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="info-card">
+                        <i class="fas fa-shield-alt info-icon"></i>
+                        <h5>Warranty Coverage</h5>
+                        <p>Comprehensive warranty and after-sales service for peace of mind.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-lg-start text-white mt-5" style="background-color: #111;">
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-uppercase font-weight-bold">GamerZone</h6>
+                    <p>Powering your play with the latest in gaming laptops, accessories, and VR tech.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-uppercase font-weight-bold">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-white">Home</a></li>
+                        <li><a href="contact.php" class="text-white">Contact Us</a></li>
+                        <li><a href="contact.php" class="text-white">Feedback</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-uppercase font-weight-bold">Contact</h6>
+                    <p>Email: support@gamerzone.com</p>
+                    <p>Phone: +94 71 123 4567</p>
+                    <div>
+                        <a href="#" class="text-white mr-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white mr-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white mr-3"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color: rgba(255,255,255,0.05);">
+            © 2025 GamerZone. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Bootstrap 4 JS -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap-4.3.1.js"></script>
+    
+    <script>
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe info cards
+        document.querySelectorAll('.info-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+
+</html>
